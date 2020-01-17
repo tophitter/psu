@@ -3,7 +3,7 @@
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/psuapp/psu.svg)](https://hub.docker.com/r/psuapp/psu/)
 [![Microbadger](https://images.microbadger.com/badges/image/psuapp/psu.svg)](http://microbadger.com/images/psuapp/psu "Image size")
-[![pipeline status](https://gitlab.com/psuapp/psu/badges/master/pipeline.svg)](https://gitlab.com/psuapp/psu/commits/master)
+[![pipeline status](https://gitlab.com/psuapp/psu/badges/1-0-stable/pipeline.svg)](https://gitlab.com/psuapp/psu/commits/1-0-stable)
 
 Bash script to deploy/update/remove stacks in a [Portainer](https://portainer.io/) instance from a [docker-compose](https://docs.docker.com/compose) [yaml file](https://docs.docker.com/compose/compose-file).
 
@@ -65,11 +65,11 @@ For detailed instructions, see [How to use](#how-to-use) section.
 
 Published Docker images are [tagged](https://hub.docker.com/r/psuapp/psu/tags) matching [GitLab tags](https://gitlab.com/psuapp/psu/-/tags):
 
--	`dev` -> [`dev`](https://gitlab.com/psuapp/psu/-/tags/dev)
--	`1`, `1.0`, `1.0.3`, `latest` -> [`v1.0.3`](https://gitlab.com/psuapp/psu/-/tags/v1.0.3)
--	`1`, `1.0`, `1.0.2` -> [`v1.0.2`](https://gitlab.com/psuapp/psu/-/tags/v1.0.2)
--	`1`, `1.0`, `1.0.1` -> [`v1.0.1`](https://gitlab.com/psuapp/psu/-/tags/v1.0.1)
--	`1`, `1.0`, `1.0.0` -> [`v1.0.0`](https://gitlab.com/psuapp/psu/-/tags/v1.0.0)
+<!-- -	`dev` -> [`dev`](https://gitlab.com/psuapp/psu/-/tags/dev) -->
+-	`1`, `1.0`, `1.0.3` -> [`v1.0.3`](https://gitlab.com/psuapp/psu/-/tags/v1.0.3)
+-	`1.0.2` -> [`v1.0.2`](https://gitlab.com/psuapp/psu/-/tags/v1.0.2)
+-	`1.0.1` -> [`v1.0.1`](https://gitlab.com/psuapp/psu/-/tags/v1.0.1)
+-	`1.0.0` -> [`v1.0.0`](https://gitlab.com/psuapp/psu/-/tags/v1.0.0)
 -	`0.1.2` -> [`v0.1.2`](https://gitlab.com/psuapp/psu/-/tags/v0.1.2)
 -	`0.1.1` -> [`v0.1.1`](https://gitlab.com/psuapp/psu/-/tags/v0.1.1)
 -	`0.1.0` -> [`v0.1.0`](https://gitlab.com/psuapp/psu/-/tags/v0.1.0)
