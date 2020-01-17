@@ -160,7 +160,10 @@ cleanup_registries:
   script:
     - cleanup_registries
   only:
-    - schedules
+    refs:
+      - schedules
+    variables:
+      - $CLEANUP_REGISTRIES_ENABLED
 
 before_script:
   - set -e
