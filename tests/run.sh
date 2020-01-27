@@ -9,15 +9,29 @@ PSU_URL="https://portainer.$BASE_DOMAIN"
 PSU_USER="admin"
 PSU_PASSWORD="mypassword"
 
+PSU_TAG=$(if [ -n "$PSU_TAG" ]; then
+    eval echo "$PSU_TAG";
+  else
+    echo "$CI_COMMIT_SHA";
+  fi)
+export PSU_TAG
+
+PSU_TAG_CORE=$(if [ -n "$PSU_TAG_CORE" ]; then
+    eval echo "$PSU_TAG_CORE";
+  else
+    echo "core-$CI_COMMIT_SHA";
+  fi)
+export PSU_TAG_CORE
+
 # Change working directory to 'tests/'
 cd "$(dirname "$0")"
 
 function psu_wrapper() {
-  docker run --rm $PSU_IMAGE:${PSU_TAG:-$CI_COMMIT_SHA} "$@"
+  docker run --rm $PSU_IMAGE:$PSU_TAG "$@"
 }
 
 function psu_core_wrapper() {
-  docker run --rm $PSU_IMAGE:${PSU_TAG_CORE:-core-$CI_COMMIT_SHA} "$@"
+  docker run --rm $PSU_IMAGE:$PSU_TAG_CORE "$@"
 }
 
 function application_exists() {

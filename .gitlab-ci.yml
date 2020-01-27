@@ -6,8 +6,8 @@ variables:
   TRAEFIK_VERSION: "2.1"
   PORTAINER_VERSION: latest
   PSU_IMAGE: ${CI_REGISTRY_IMAGE}/builds
-  PSU_TAG: $CI_COMMIT_SHA
-  PSU_TAG_CORE: core-${CI_COMMIT_SHA}
+  PSU_TAG: $$CI_COMMIT_SHA
+  PSU_TAG_CORE: core-$$CI_COMMIT_SHA
   DOCKER_REGISTRY_IMAGE: $DOCKER_REGISTRY/$CI_PROJECT_PATH
 
 stages:
@@ -29,9 +29,16 @@ stages:
     - setup_docker
     - registry_login
     - cd ${CONTAINER_FOLDER:-.}
+    - |
+      CONTAINER_COMMIT_SHA=$(if [ -n "$CONTAINER_COMMIT_SHA" ]; then
+        eval echo "$CONTAINER_COMMIT_SHA";
+      else
+        echo "$CI_COMMIT_SHA";
+      fi)
+      export CONTAINER_COMMIT_SHA
     - docker pull $CONTAINER_IMAGE:${CONTAINER_VERSION:-latest} || true
-    - docker build --pull $(if [[ -n "$DOCKER_CACHE_DISABLED" ]]; then echo "--no-cache "; else echo "--cache-from $CONTAINER_IMAGE:${CONTAINER_VERSION:-latest}"; fi) --file ${DOCKER_FILE:-Dockerfile} --tag $CONTAINER_IMAGE:${CONTAINER_COMMIT_SHA:-$CI_COMMIT_SHA} --tag $CONTAINER_IMAGE:${CONTAINER_VERSION:-latest} --build-arg HTTP_PROXY="$HTTP_PROXY" --build-arg http_proxy="$http_proxy" --build-arg HTTPS_PROXY="$HTTPS_PROXY" --build-arg https_proxy="$https_proxy" --build-arg FTP_PROXY="$FTP_PROXY" --build-arg ftp_proxy="$ftp_proxy" --build-arg NO_PROXY="$NO_PROXY" --build-arg no_proxy="$no_proxy" .
-    - docker push $CONTAINER_IMAGE:${CONTAINER_COMMIT_SHA:-$CI_COMMIT_SHA}
+    - docker build --pull $(if [[ -n "$DOCKER_CACHE_DISABLED" ]]; then echo "--no-cache "; else echo "--cache-from $CONTAINER_IMAGE:${CONTAINER_VERSION:-latest}"; fi) --file ${DOCKER_FILE:-Dockerfile} --tag $CONTAINER_IMAGE:$CONTAINER_COMMIT_SHA --tag $CONTAINER_IMAGE:${CONTAINER_VERSION:-latest} --build-arg HTTP_PROXY="$HTTP_PROXY" --build-arg http_proxy="$http_proxy" --build-arg HTTPS_PROXY="$HTTPS_PROXY" --build-arg https_proxy="$https_proxy" --build-arg FTP_PROXY="$FTP_PROXY" --build-arg ftp_proxy="$ftp_proxy" --build-arg NO_PROXY="$NO_PROXY" --build-arg no_proxy="$no_proxy" .
+    - docker push $CONTAINER_IMAGE:$CONTAINER_COMMIT_SHA
     - docker push $CONTAINER_IMAGE:${CONTAINER_VERSION:-latest}
 
 build:main:
@@ -46,7 +53,7 @@ build:debian:
   variables:
     CONTAINER_NAME: $CI_PROJECT_NAME
     CONTAINER_VERSION: $CI_COMMIT_REF_SLUG-build-debian
-    CONTAINER_COMMIT_SHA: debian-$CI_COMMIT_SHA
+    CONTAINER_COMMIT_SHA: debian-$$CI_COMMIT_SHA
     DOCKER_FILE: Dockerfile.debian
     CONTAINER_IMAGE: ${CI_REGISTRY_IMAGE}/builds
 
@@ -55,15 +62,16 @@ build:core:
   variables:
     CONTAINER_NAME: $CI_PROJECT_NAME
     CONTAINER_VERSION: $CI_COMMIT_REF_SLUG-build-core
-    CONTAINER_COMMIT_SHA: core-$CI_COMMIT_SHA
+    CONTAINER_COMMIT_SHA: core-$$CI_COMMIT_SHA
     DOCKER_FILE: Dockerfile.core
     CONTAINER_IMAGE: ${CI_REGISTRY_IMAGE}/builds
+
 build:debian-core:
   <<: *build_definition
   variables:
     CONTAINER_NAME: $CI_PROJECT_NAME
     CONTAINER_VERSION: $CI_COMMIT_REF_SLUG-build-debian-core
-    CONTAINER_COMMIT_SHA: debian-core-$CI_COMMIT_SHA
+    CONTAINER_COMMIT_SHA: debian-core-$$CI_COMMIT_SHA
     DOCKER_FILE: Dockerfile.debian-core
     CONTAINER_IMAGE: ${CI_REGISTRY_IMAGE}/builds
 
@@ -99,8 +107,8 @@ test:portainer-latest:
 test:portainer-latest:debian:
   <<: *test_definition
   variables:
-    PSU_TAG: debian-${CI_COMMIT_SHA}
-    PSU_TAG_CORE: debian-core-${CI_COMMIT_SHA}
+    PSU_TAG: debian-$$CI_COMMIT_SHA
+    PSU_TAG_CORE: debian-core-$$CI_COMMIT_SHA
 
 release:
   stage: deploy
