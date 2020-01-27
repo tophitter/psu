@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.4] - 2020-01-27
+### Added
+- Use the `$CLEANUP_REGISTRIES_ENABLED` CI variable for deleting Docker repository tags in bulk
+
+### Changed
+- Remove unused git and Docker tags in `README.md`
+
+### Fixed
+- Fix scheduled pipeline who update Docker images for the latest stable git tag
+
 ## [1.0.3] - 2020-01-09
 ### Added
 - Cleaning old Docker repository builds tags via [GitLab API](https://docs.gitlab.com/12.6/ee/api/container_registry.html#delete-repository-tags-in-bulk)
@@ -65,7 +75,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Debug mode
 - Strict mode
 
-[Unreleased]: https://gitlab.com/psuapp/psu/compare/v1.0.3...1-0-stable
+[Unreleased]: https://gitlab.com/psuapp/psu/compare/v1.0.4...1-0-stable
+[1.0.4]: https://gitlab.com/psuapp/psu/-/tags/v1.0.4
 [1.0.3]: https://gitlab.com/psuapp/psu/-/tags/v1.0.3
 [1.0.2]: https://gitlab.com/psuapp/psu/-/tags/v1.0.2
 [1.0.1]: https://gitlab.com/psuapp/psu/-/tags/v1.0.1
