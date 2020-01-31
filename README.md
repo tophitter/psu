@@ -55,7 +55,7 @@ For Debian and similar apt-powered systems: `apt install bash httpie jq`.
 
 If you don't want or can't install `psu` and its dependencies, you can run it with the default [published Docker image](https://hub.docker.com/r/psuapp/psu), like this:
 ```bash
-docker run psuapp/psu deploy ...
+docker run psuapp/psu:1.0 deploy ...
 ```
 > **Note**: Docker images are also available on [GitLab](https://gitlab.com/psuapp/psu/container_registry).
 
@@ -93,7 +93,7 @@ The `debian` and `debian-core` variants use [Debian](https://www.debian.org) ins
 
 For testing/debugging, you can use this Docker image in interactive mode, to run any commands inside the container:
 ```bash
-docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -it --rm --entrypoint bash psuapp/psu
+docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -it --rm --entrypoint bash psuapp/psu:1.0
 # Run any commands here! E.g.
 $ psu --version
 Portainer Stack Utils, version 1.0.4
@@ -129,7 +129,7 @@ bash ./psu rm --user admin --password password --url https://portainer.local --n
 
 **With Docker:**
 ```bash
-docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -v $(pwd)/.env:/.env psuapp/psu deploy --user admin --password password --url https://portainer.local --name mystack --compose-file docker-compose.yml --env-file .env
+docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -v $(pwd)/.env:/.env psuapp/psu:1.0 deploy --user admin --password password --url https://portainer.local --name mystack --compose-file docker-compose.yml --env-file .env
 ```
 
 ### With flags
@@ -157,7 +157,7 @@ bash ./psu rm -u admin -p password -l https://portainer.local -n mystack
 
 **With Docker:**
 ```bash
-docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -v $(pwd)/.env:/.env psuapp/psu deploy -u admin -p password -l https://portainer.local -n mystack -c docker-compose.yml -g .env
+docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -v $(pwd)/.env:/.env psuapp/psu:1.0 deploy -u admin -p password -l https://portainer.local -n mystack -c docker-compose.yml -g .env
 ```
 
 ### With envvars
@@ -199,7 +199,7 @@ bash ./psu
 
 **With Docker:**
 ```bash
-docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -v $(pwd)/.env:/.env -e ACTION="deploy" -e PORTAINER_USER="admin" -e PORTAINER_PASSWORD="password" -e PORTAINER_URL="https://portainer.local" -e PORTAINER_STACK_NAME="mystack" -e DOCKER_COMPOSE_FILE="docker-compose.yml" -e ENVIRONMENT_VARIABLES_FILE=".env" psuapp/psu
+docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -v $(pwd)/.env:/.env -e ACTION="deploy" -e PORTAINER_USER="admin" -e PORTAINER_PASSWORD="password" -e PORTAINER_URL="https://portainer.local" -e PORTAINER_STACK_NAME="mystack" -e DOCKER_COMPOSE_FILE="docker-compose.yml" -e ENVIRONMENT_VARIABLES_FILE=".env" psuapp/psu:1.0
 ```
 
 ## Documentation
