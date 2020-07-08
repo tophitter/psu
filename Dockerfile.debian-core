@@ -1,6 +1,7 @@
 FROM debian:10-slim
 
-RUN apt-get update -yqq; \
+RUN set -e; \
+    apt-get update -yqq; \
     apt-get install \
       ca-certificates gettext-base httpie jq -yqq; \
     \

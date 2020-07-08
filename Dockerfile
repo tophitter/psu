@@ -1,6 +1,7 @@
 FROM alpine:3.12
 
-RUN apk add --no-cache \
+RUN set -e; \
+    apk add --no-cache \
       bash ca-certificates gettext jq \
       py3-pip python3-dev libc-dev libffi-dev openssl-dev gcc make; \
     \
