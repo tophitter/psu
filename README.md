@@ -66,6 +66,7 @@ For detailed instructions, see [How to use](#how-to-use) section.
 Published Docker images are [tagged](https://hub.docker.com/r/psuapp/psu/tags) matching [GitLab tags](https://gitlab.com/psuapp/psu/-/tags):
 
 <!-- -	`dev` -> [`dev`](https://gitlab.com/psuapp/psu/-/tags/dev) -->
+-	`1.1.0-alpha` -> [`v1.1.0-alpha`](https://gitlab.com/psuapp/psu/-/tags/v1.1.0-alpha)
 -	`1`, `1.0`, `1.0.5` -> [`v1.0.5`](https://gitlab.com/psuapp/psu/-/tags/v1.0.5)
 -	`1.0.4` -> [`v1.0.4`](https://gitlab.com/psuapp/psu/-/tags/v1.0.4)
 -	`1.0.3` -> [`v1.0.3`](https://gitlab.com/psuapp/psu/-/tags/v1.0.3)
@@ -81,14 +82,16 @@ Published Docker images are [tagged](https://hub.docker.com/r/psuapp/psu/tags) m
 The `core` variant doesn't include `docker-compose`, so it's a bit smaller.
 But you can't lint Docker compose/stack file before deploying a stack.
 <!-- -	`dev-core` -> [`dev`](https://gitlab.com/psuapp/psu/-/tags/dev) -->
+-	`1.1.0-alpha-core` -> [`v1.1.0-alpha`](https://gitlab.com/psuapp/psu/-/tags/v1.1.0-alpha)
 -	`1-core`, `1.0-core`, `1.0.5-core`, `core` -> [`v1.0.5`](https://gitlab.com/psuapp/psu/-/tags/v1.0.5)
 
 The `debian` and `debian-core` variants use [Debian](https://www.debian.org) instead of [Alpine](https://alpinelinux.org/) as base image for `psu`.
 <!-- -	`dev-debian` -> [`dev`](https://gitlab.com/psuapp/psu/-/tags/dev)
 -	`dev-debian-core` -> [`dev`](https://gitlab.com/psuapp/psu/-/tags/dev) -->
+-	`1.1.0-alpha-debian` -> [`v1.1.0-alpha`](https://gitlab.com/psuapp/psu/-/tags/v1.1.0-alpha)
+-	`1.1.0-alpha-debian-core` -> [`v1.1.0-alpha`](https://gitlab.com/psuapp/psu/-/tags/v1.1.0-alpha)
 -	`1-debian`, `1.0-debian`, `1.0.5-debian`, `debian` -> [`v1.0.5`](https://gitlab.com/psuapp/psu/-/tags/v1.0.5)
 -	`1-debian-core`, `1.0-debian-core`, `1.0.5-debian-core`, `debian-core` -> [`v1.0.5`](https://gitlab.com/psuapp/psu/-/tags/v1.0.5)
-
 
 #### Testing/debugging:
 
@@ -97,7 +100,7 @@ For testing/debugging, you can use this Docker image in interactive mode, to run
 docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -it --rm --entrypoint bash psuapp/psu:1.0
 # Run any commands here! E.g.
 $ psu --version
-Portainer Stack Utils, version 1.0.5
+Portainer Stack Utils, version 1.1.0-alpha
   License GPLv3: GNU GPL version 3
 ```
 
