@@ -5,11 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Added
-- Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer [1.24.1](https://app.swaggerhub.com/apis/deviantony/Portainer/1.24.1) API
-
 ### Changed
 - Upgrade operating system of Docker based images, with [Alpine 3.12](https://hub.docker.com/_/alpine) and [Debian 10](https://hub.docker.com/_/debian)
+
+## [1.0.5] - 2020-07-29
+### Added
+- Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer [1.24.1](https://app.swaggerhub.com/apis/deviantony/Portainer/1.24.1) API
 
 ### Removed
 - Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer [1.21.0](https://app.swaggerhub.com/apis/deviantony/Portainer/1.21.0) API
@@ -83,7 +84,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Debug mode
 - Strict mode
 
-[Unreleased]: https://gitlab.com/psuapp/psu/compare/v1.0.4...1-0-stable
+[Unreleased]: https://gitlab.com/psuapp/psu/compare/v1.0.5...1-0-stable
+[1.0.5]: https://gitlab.com/psuapp/psu/-/tags/v1.0.5
 [1.0.4]: https://gitlab.com/psuapp/psu/-/tags/v1.0.4
 [1.0.3]: https://gitlab.com/psuapp/psu/-/tags/v1.0.3
 [1.0.2]: https://gitlab.com/psuapp/psu/-/tags/v1.0.2
