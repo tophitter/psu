@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer [1.24.0](https://app.swaggerhub.com/apis/deviantony/Portainer/1.24.0) API
+- Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer [1.24.1](https://app.swaggerhub.com/apis/deviantony/Portainer/1.24.1) API
 
 ### Changed
 - Upgrade operating system of Docker based images, with [Alpine 3.12](https://hub.docker.com/_/alpine) and [Debian 10](https://hub.docker.com/_/debian)
