@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Changelog link for `psu` version `1.1.0-alpha`
 
 ## [1.1.0-alpha] - 2020-07-29
 ### Changed
@@ -87,6 +89,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Strict mode
 
 [Unreleased]: https://gitlab.com/psuapp/psu/compare/v1.1.0-alpha...1-1-next
+[1.1.0-alpha]: https://gitlab.com/psuapp/psu/-/tags/v1.1.0-alpha
 [1.0.5]: https://gitlab.com/psuapp/psu/-/tags/v1.0.5
 [1.0.4]: https://gitlab.com/psuapp/psu/-/tags/v1.0.4
 [1.0.3]: https://gitlab.com/psuapp/psu/-/tags/v1.0.3
