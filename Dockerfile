@@ -3,9 +3,9 @@ FROM alpine:3.12
 RUN set -e; \
     apk add --no-cache \
       bash ca-certificates gettext jq \
-      py3-pip python3-dev libc-dev libffi-dev openssl-dev gcc make; \
+      py3-pip python3-dev libc-dev libffi-dev openssl-dev gcc make musl-dev cargo; \
     \
-    pip3 --no-cache-dir install 'docker-compose>=1.26.2,<1.27.0' 'httpie>=1.0.3,<1.1.0'; \
+    pip3 --no-cache-dir install 'docker-compose>=1.26.2,<1.27.0' 'httpie>=1.0.3,<1.1.0' 'cryptography>=3.3.0,<3.4.0'; \
     \
     apk del python3-dev libc-dev libffi-dev openssl-dev gcc make; \
     rm -rf /tmp/src
