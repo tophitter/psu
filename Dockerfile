@@ -7,7 +7,7 @@ RUN set -e; \
     \
     pip3 --no-cache-dir install 'docker-compose>=1.26.2,<1.27.0' 'httpie>=1.0.3,<1.1.0' 'cryptography>=3.3.0,<3.4.0'; \
     \
-    apk del python3-dev libc-dev libffi-dev openssl-dev gcc make; \
+    apk del python3-dev libc-dev libffi-dev openssl-dev gcc make musl-dev cargo; \
     rm -rf /tmp/src
 
 ENV LANG="en_US.UTF-8" \
