@@ -85,16 +85,16 @@ Published Docker images are [tagged](https://hub.docker.com/r/psuapp/psu/tags) m
 The `core` variant doesn't include `docker-compose`, so it's a bit smaller.
 But you can't lint Docker compose/stack file before deploying a stack.
 <!-- -	`dev-core` -> [`dev`](https://gitlab.com/psuapp/psu/-/tags/dev) -->
--	`1-core`, `1.1-core`, `1.1.0-core`, `core` -> [`v1.1.0`](https://gitlab.com/psuapp/psu/-/tags/v1.1.0)
+-	`1-core`, `1.1-core`, `1.1.0-core` -> [`v1.1.0`](https://gitlab.com/psuapp/psu/-/tags/v1.1.0)
 -	`1.0-core`, `1.0.7-core` -> [`v1.0.7`](https://gitlab.com/psuapp/psu/-/tags/v1.0.7)
 
 The `debian` and `debian-core` variants use [Debian](https://www.debian.org) instead of [Alpine](https://alpinelinux.org/) as base image for `psu`.
 <!-- -	`dev-debian` -> [`dev`](https://gitlab.com/psuapp/psu/-/tags/dev)
 -	`dev-debian-core` -> [`dev`](https://gitlab.com/psuapp/psu/-/tags/dev) -->
 
--	`1-debian`, `1.0-debian`, `1.1.0-debian`, `debian` -> [`v1.1.0`](https://gitlab.com/psuapp/psu/-/tags/v1.1.0)
--	`1-debian-core`, `1.0-debian-core`, `1.1.0-debian-core`, `debian-core` -> [`v1.1.0`](https://gitlab.com/psuapp/psu/-/tags/v1.1.0)
--	`1.0-debian`, `1.0.7-debian`, -> [`v1.0.7`](https://gitlab.com/psuapp/psu/-/tags/v1.0.7)
+-	`1-debian`, `1.0-debian`, `1.1.0-debian` -> [`v1.1.0`](https://gitlab.com/psuapp/psu/-/tags/v1.1.0)
+-	`1-debian-core`, `1.0-debian-core`, `1.1.0-debian-core` -> [`v1.1.0`](https://gitlab.com/psuapp/psu/-/tags/v1.1.0)
+-	`1.0-debian`, `1.0.7-debian` -> [`v1.0.7`](https://gitlab.com/psuapp/psu/-/tags/v1.0.7)
 -	`1.0-debian-core`, `1.0.7-debian-core` -> [`v1.0.7`](https://gitlab.com/psuapp/psu/-/tags/v1.0.7)
 
 #### Testing/debugging:
