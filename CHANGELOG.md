@@ -5,15 +5,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.1.0] - 2021-02-18
 ### Changed
 - Use [Traefik 2.2](https://docs.traefik.io/v2.2/) instead of [Traefik 2.1](https://docs.traefik.io/v2.1/) for testing
 
 ### Fixed
 - Changelog link for `psu` version `1.1.0-alpha`
+- Fix `cryptography` building error
 
 ## [1.1.0-alpha] - 2020-07-29
 ### Changed
 - Upgrade operating system of Docker based images, with [Alpine 3.12](https://hub.docker.com/_/alpine) and [Debian 10](https://hub.docker.com/_/debian)
+
+### Fixed
+- Docker build should fail if a shell command failed
+
+## [1.0.7] - 2021-02-16
+### Fixed
+- Remove useless packages after building `docker-compose`, for the main Docker image
+
+## [1.0.6] - 2021-02-16
+### Fixed
+- Docker build should fail if a shell command failed
+- Fix `cryptography` building error
 
 ## [1.0.5] - 2020-07-29
 ### Added
@@ -91,8 +106,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Debug mode
 - Strict mode
 
-[Unreleased]: https://gitlab.com/psuapp/psu/compare/v1.1.0-alpha...1-1-next
+[Unreleased]: https://gitlab.com/psuapp/psu/compare/v1.1.0...1-1-stable
+[1.1.0]: https://gitlab.com/psuapp/psu/-/tags/v1.1.0
 [1.1.0-alpha]: https://gitlab.com/psuapp/psu/-/tags/v1.1.0-alpha
+[1.0.7]: https://gitlab.com/psuapp/psu/-/tags/v1.0.7
+[1.0.6]: https://gitlab.com/psuapp/psu/-/tags/v1.0.6
 [1.0.5]: https://gitlab.com/psuapp/psu/-/tags/v1.0.5
 [1.0.4]: https://gitlab.com/psuapp/psu/-/tags/v1.0.4
 [1.0.3]: https://gitlab.com/psuapp/psu/-/tags/v1.0.3
