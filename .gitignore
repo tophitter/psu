@@ -1,0 +1,3 @@
+/tests/*-final.json
+/tests/dockerfiles/.env
+/tests/dockerfiles/*-final.yml

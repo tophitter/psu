@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0-alpha] - <abbr title="To Be Announced">TBA</abbr>
+### Added
+- Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer <abbr title="Community Edition">CE</abbr> [2.0.1](https://app.swaggerhub.com/apis/deviantony/Portainer/2.0.1) API
+- Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer <abbr title="Community Edition">CE</abbr> [2.1.1](https://app.swaggerhub.com/apis/deviantony/Portainer/2.0.1) API
+
+### Changed
+- Use Docker [Compose 1.28.3](https://github.com/docker/compose/releases/tag/1.28.3) instead of Docker [Compose 1.26.2](https://github.com/docker/compose/releases/tag/1.26.2)
+- Use [Traefik 2.4](https://docs.traefik.io/traefik/) instead of [Traefik 2.2](https://docs.traefik.io/traefik/v2.2/) for testing
+- Upgrade operating system of Docker based images, with [Alpine 3.13](https://hub.docker.com/_/alpine)
+
+### Removed
+- Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer [1.22.2](https://app.swaggerhub.com/apis/deviantony/Portainer/1.22.2) API
+- Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer [1.23.2](https://app.swaggerhub.com/apis/deviantony/Portainer/1.23.2) API
+
 ## [1.1.0] - 2021-02-18
 ### Changed
 - Use [Traefik 2.2](https://docs.traefik.io/v2.2/) instead of [Traefik 2.1](https://docs.traefik.io/v2.1/) for testing
@@ -106,7 +120,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Debug mode
 - Strict mode
 
-[Unreleased]: https://gitlab.com/psuapp/psu/compare/v1.1.0...1-1-stable
+[Unreleased]: https://gitlab.com/psuapp/psu/compare/v1.2.0-alpha...1-2-next
+[1.2.0-alpha]: https://gitlab.com/psuapp/psu/-/tags/v1.2.0-alpha
 [1.1.0]: https://gitlab.com/psuapp/psu/-/tags/v1.1.0
 [1.1.0-alpha]: https://gitlab.com/psuapp/psu/-/tags/v1.1.0-alpha
 [1.0.7]: https://gitlab.com/psuapp/psu/-/tags/v1.0.7

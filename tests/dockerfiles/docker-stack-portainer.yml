@@ -1,12 +1,12 @@
-version: '3.6'
+version: '3.7'
 
 services:
   portainer:
-    image: portainer/portainer:$PORTAINER_VERSION
-    command: --admin-password-file '/run/secrets/portainer-password' --no-analytics
+    image: ${PORTAINER_IMAGE}:${PORTAINER_VERSION}
+    command: --admin-password-file '/run/secrets/psu-portainer-password'${PORTAINER_COMMAND_OPTIONS}
     labels:
       - traefik.enable=true
-      - traefik.docker.network=traefik-net
+      - traefik.docker.network=psu-traefik-net
       # HTTPS route
       - "traefik.http.routers.portainer.entrypoints=https"
       - "traefik.http.routers.portainer.rule=Host(`portainer.$BASE_DOMAIN`)"
@@ -18,7 +18,7 @@ services:
       # Service
       - traefik.http.services.portainer.loadbalancer.server.port=9000
     networks:
-      - traefik-net
+      - psu-traefik-net
     environment:
       - HTTP_PROXY
       - HTTPS_PROXY
@@ -27,9 +27,9 @@ services:
       - NO_PROXY
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - portainer:/data
+      - psu-portainer:/data
     secrets:
-      - portainer-password
+      - psu-portainer-password
     deploy:
       placement:
         constraints:
@@ -39,12 +39,12 @@ services:
         delay: 10s
 
 networks:
-  traefik-net:
+  psu-traefik-net:
     driver: overlay
     external: true
 
 secrets:
-  portainer-password:
+  psu-portainer-password:
     external: true
 volumes:
-  portainer:
+  psu-portainer:

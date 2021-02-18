@@ -3,7 +3,7 @@
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/psuapp/psu.svg)](https://hub.docker.com/r/psuapp/psu/)
 [![Microbadger](https://images.microbadger.com/badges/image/psuapp/psu.svg)](http://microbadger.com/images/psuapp/psu "Image size")
-[![pipeline status](https://gitlab.com/psuapp/psu/badges/1-1-stable/pipeline.svg)](https://gitlab.com/psuapp/psu/commits/1-1-stable)
+[![pipeline status](https://gitlab.com/psuapp/psu/badges/1-2-next/pipeline.svg)](https://gitlab.com/psuapp/psu/commits/1-2-next)
 
 Bash script to deploy/update/remove stacks in a [Portainer](https://portainer.io/) instance from a [docker-compose](https://docs.docker.com/compose) [yaml file](https://docs.docker.com/compose/compose-file).
 
@@ -55,7 +55,7 @@ For Debian and similar apt-powered systems: `apt install bash httpie jq`.
 
 If you don't want or can't install `psu` and its dependencies, you can run it with the default [published Docker image](https://hub.docker.com/r/psuapp/psu), like this:
 ```bash
-docker run psuapp/psu:1.1 deploy ...
+docker run psuapp/psu:1.2 deploy ...
 ```
 > **Note**: Docker images are also available on [GitLab](https://gitlab.com/psuapp/psu/container_registry).
 
@@ -66,6 +66,7 @@ For detailed instructions, see [How to use](#how-to-use) section.
 Published Docker images are [tagged](https://hub.docker.com/r/psuapp/psu/tags) matching [GitLab tags](https://gitlab.com/psuapp/psu/-/tags):
 
 <!-- -	`dev` -> [`dev`](https://gitlab.com/psuapp/psu/-/tags/dev) -->
+-	`1.2.0-alpha` -> [`v1.2.0-alpha`](https://gitlab.com/psuapp/psu/-/tags/v1.2.0-alpha)
 -	`1`, `1.1`, `1.1.0` -> [`v1.1.0`](https://gitlab.com/psuapp/psu/-/tags/v1.1.0)
 -	`1.1.0-alpha` -> [`v1.1.0-alpha`](https://gitlab.com/psuapp/psu/-/tags/v1.1.0-alpha)
 -	`1.0`, `1.0.7` -> [`v1.0.7`](https://gitlab.com/psuapp/psu/-/tags/v1.0.7)
@@ -101,10 +102,10 @@ The `debian` and `debian-core` variants use [Debian](https://www.debian.org) ins
 
 For testing/debugging, you can use this Docker image in interactive mode, to run any commands inside the container:
 ```bash
-docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -it --rm --entrypoint bash psuapp/psu:1.1
+docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -it --rm --entrypoint bash psuapp/psu:1.2
 # Run any commands here! E.g.
 $ psu --version
-Portainer Stack Utils, version 1.1.0
+Portainer Stack Utils, version 1.2.0-alpha
   License GPLv3: GNU GPL version 3
 ```
 
@@ -137,7 +138,7 @@ bash ./psu rm --user admin --password password --url https://portainer.local --n
 
 **With Docker:**
 ```bash
-docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -v $(pwd)/.env:/.env psuapp/psu:1.1 deploy --user admin --password password --url https://portainer.local --name mystack --compose-file docker-compose.yml --env-file .env
+docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -v $(pwd)/.env:/.env psuapp/psu:1.2 deploy --user admin --password password --url https://portainer.local --name mystack --compose-file docker-compose.yml --env-file .env
 ```
 
 ### With flags
@@ -165,7 +166,7 @@ bash ./psu rm -u admin -p password -l https://portainer.local -n mystack
 
 **With Docker:**
 ```bash
-docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -v $(pwd)/.env:/.env psuapp/psu:1.1 deploy -u admin -p password -l https://portainer.local -n mystack -c docker-compose.yml -g .env
+docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -v $(pwd)/.env:/.env psuapp/psu:1.2 deploy -u admin -p password -l https://portainer.local -n mystack -c docker-compose.yml -g .env
 ```
 
 ### With envvars
@@ -207,20 +208,20 @@ bash ./psu
 
 **With Docker:**
 ```bash
-docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -v $(pwd)/.env:/.env -e ACTION="deploy" -e PORTAINER_USER="admin" -e PORTAINER_PASSWORD="password" -e PORTAINER_URL="https://portainer.local" -e PORTAINER_STACK_NAME="mystack" -e DOCKER_COMPOSE_FILE="docker-compose.yml" -e ENVIRONMENT_VARIABLES_FILE=".env" psuapp/psu:1.1
+docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -v $(pwd)/.env:/.env -e ACTION="deploy" -e PORTAINER_USER="admin" -e PORTAINER_PASSWORD="password" -e PORTAINER_URL="https://portainer.local" -e PORTAINER_STACK_NAME="mystack" -e DOCKER_COMPOSE_FILE="docker-compose.yml" -e ENVIRONMENT_VARIABLES_FILE=".env" psuapp/psu:1.2
 ```
 
 ## Documentation
 
 <div class="docsify-hidden">
-For advanced usage, see the full <a href="https://psuapp.gitlab.io/psu/1-1-stable"><abbr title="Portainer Stack Utils">PSU</abbr> documentation</a>.
+For advanced usage, see the full <a href="https://psuapp.gitlab.io/psu/1-2-next"><abbr title="Portainer Stack Utils">PSU</abbr> documentation</a>.
 </div>
 
 For detailed instructions, see the [CLI Commands](docs/README.md) documentation.
 
 ## Supported Portainer API
 
-<abbr title="Portainer Stack Utils">PSU</abbr> was created for the latest versions of Portainer API, which at the time of writing are [1.22.2](https://app.swaggerhub.com/apis/deviantony/Portainer/1.22.2), [1.23.2](https://app.swaggerhub.com/apis/deviantony/Portainer/1.23.2) and [1.24.1](https://app.swaggerhub.com/apis/deviantony/Portainer/1.24.1).
+<abbr title="Portainer Stack Utils">PSU</abbr> was created for the latest versions of Portainer API, which at the time of writing are [1.24.1](https://app.swaggerhub.com/apis/deviantony/Portainer/1.24.1), [2.0.1](https://app.swaggerhub.com/apis/deviantony/Portainer/2.0.1) and [2.1.1](https://app.swaggerhub.com/apis/deviantony/Portainer/2.0.1).
 
 ## License
 

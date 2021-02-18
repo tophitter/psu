@@ -3,8 +3,10 @@ image: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/hub/auto-deploy-image:latest
 variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: "/certs"
-  TRAEFIK_VERSION: "2.2"
+  TRAEFIK_VERSION: "2.4"
+  PORTAINER_IMAGE: "portainer/portainer-ce"
   PORTAINER_VERSION: latest
+  PORTAINER_COMMAND_OPTIONS: ""
   PSU_IMAGE: ${CI_REGISTRY_IMAGE}/builds
   PSU_TAG: $$CI_COMMIT_SHA
   PSU_TAG_CORE: core-$$CI_COMMIT_SHA
@@ -91,15 +93,18 @@ build:debian-core:
     - registry_login
     - bash scripts/test.sh
 
-test:portainer-1.22.2:
+test:portainer-1.24.1:
   <<: *test_definition
   variables:
-    PORTAINER_VERSION: 1.22.2
+    PORTAINER_IMAGE: "portainer/portainer"
+    PORTAINER_VERSION: 1.24.1
+    PORTAINER_COMMAND_OPTIONS: " --no-analytics"
 
-test:portainer-1.23.2:
+
+test:portainer-2.0.1:
   <<: *test_definition
   variables:
-    PORTAINER_VERSION: 1.23.2
+    PORTAINER_VERSION: 2.0.1
 
 test:portainer-latest:
   <<: *test_definition

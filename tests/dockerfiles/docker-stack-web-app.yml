@@ -1,4 +1,4 @@
-version: '3.6'
+version: '3.7'
 
 services:
   job:
@@ -27,7 +27,7 @@ services:
       - https_proxy
       - NO_PROXY
     volumes:
-      - php-runner:/var/run/php
+      - psu-php-runner:/var/run/php
     deploy:
       update_config:
         order: start-first
@@ -37,7 +37,7 @@ services:
     image: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/hub/testing/psu-apache2:latest
     labels:
       - traefik.enable=true
-      - traefik.docker.network=traefik-net
+      - traefik.docker.network=psu-traefik-net
       # HTTPS route
       - "traefik.http.routers.web-php-app.entrypoints=https"
       - "traefik.http.routers.web-php-app.rule=Host(`$PSU_STACK_NAME.$BASE_DOMAIN`)"
@@ -56,17 +56,17 @@ services:
       - https_proxy
       - NO_PROXY
     volumes:
-      - php-runner:/var/run/php
+      - psu-php-runner:/var/run/php
     deploy:
       update_config:
         failure_action: rollback
         order: start-first
     networks:
-      - traefik-net
+      - psu-traefik-net
 
 networks:
-  traefik-net:
+  psu-traefik-net:
     external: true
 
 volumes:
-  php-runner:
+  psu-php-runner:

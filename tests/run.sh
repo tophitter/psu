@@ -1,13 +1,25 @@
 #!/usr/bin/env bash
 set -e
+
+# Change working directory to 'tests/'
+cd "$(dirname "$0")"
+
+# Using .env file when running tests without GitLab CI
+if [[ -f "dockerfiles/.env" ]]; then
+  set -a
+  source "dockerfiles/.env"
+  set +a
+fi
+
 [[ "$TRACE" ]] && set -x
 
-CLUSTER_IP=$(getent hosts cluster | awk '{ print $1 }')
+CLUSTER_NAME=${CLUSTER_NAME:-cluster}
+CLUSTER_IP=${CLUSTER_IP:-$(getent hosts $CLUSTER_NAME | awk '{ print $1 }')}
 export BASE_DOMAIN="$CLUSTER_IP.nip.io"
 export PSU_STACK_NAME="web-app"
 PSU_URL="https://portainer.$BASE_DOMAIN"
 PSU_USER="admin"
-PSU_PASSWORD="mypassword"
+PSU_PASSWORD=${PSU_PASSWORD:-"$(openssl rand -hex 50)"}
 
 PSU_TAG=$(if [ -n "$PSU_TAG" ]; then
     eval echo "$PSU_TAG";
@@ -22,9 +34,6 @@ PSU_TAG_CORE=$(if [ -n "$PSU_TAG_CORE" ]; then
     echo "core-$CI_COMMIT_SHA";
   fi)
 export PSU_TAG_CORE
-
-# Change working directory to 'tests/'
-cd "$(dirname "$0")"
 
 function psu_wrapper() {
   docker run --rm $PSU_IMAGE:$PSU_TAG "$@"
@@ -53,6 +62,23 @@ function application_exists() {
   fi
 }
 
+# Source: https://stackoverflow.com/a/24067243
+function version {
+  echo "$@" | awk -F. '{ printf("%03d%03d%03d\n", $1,$2,$3); }';
+}
+
+# Leave Docker Swarm, if already set
+docker swarm leave --force && sleep 3 | true
+
+# Remove admin password from Docker secrets, if already set
+docker secret rm psu-portainer-password | true
+
+# Remove portainer data, if already set
+docker volume rm --force portainer_psu-portainer && sleep 2 | true
+
+# Remove web-app data, if already set
+docker volume rm --force web-app_psu-php-runner && sleep 2 | true
+
 # Init Docker Swarm
 docker swarm init
 
@@ -60,12 +86,15 @@ docker swarm init
 # Parse the Docker traefik stack file to deploy
 envsubst '$TRAEFIK_VERSION,$BASE_DOMAIN' < dockerfiles/docker-stack-traefik.yml > dockerfiles/docker-stack-traefik-final.yml
 docker stack deploy -c dockerfiles/docker-stack-traefik-final.yml traefik --with-registry-auth
-bash -c "timeout 20 bash -c 'while ! (echo > /dev/tcp/cluster/443 && curl -fks --max-time 2 https://traefik.$BASE_DOMAIN) >/dev/null 2>&1; do sleep 1; done;'"
+bash -c "timeout 20 bash -c 'while ! (echo > /dev/tcp/$CLUSTER_NAME/443 && curl -fks --max-time 2 https://traefik.$BASE_DOMAIN) >/dev/null 2>&1; do sleep 1; done;'"
 
 # Deploy Portainer test
-echo -n $PSU_PASSWORD | docker secret create portainer-password -
+# Create admin password as a Docker secret
+# See: https://documentation.portainer.io/v2.0/deploy/initial/
+echo -n $PSU_PASSWORD | docker secret create psu-portainer-password -
+
 # Parse the Docker portainer stack file to deploy
-envsubst '$PORTAINER_VERSION,$BASE_DOMAIN' < dockerfiles/docker-stack-portainer.yml > dockerfiles/docker-stack-portainer-final.yml
+envsubst '$PORTAINER_IMAGE,$PORTAINER_VERSION,$PORTAINER_COMMAND_OPTIONS,$BASE_DOMAIN' < dockerfiles/docker-stack-portainer.yml > dockerfiles/docker-stack-portainer-final.yml
 docker stack deploy -c dockerfiles/docker-stack-portainer-final.yml portainer --with-registry-auth
 bash -c "timeout 20 bash -c 'while ! (curl -fkLs --max-time 2 $PSU_URL) >/dev/null 2>&1; do sleep 1; done;'"
 
@@ -86,8 +115,14 @@ PSU_AUTH_TOKEN=$(psu_wrapper login --user $PSU_USER --password $PSU_PASSWORD --u
 # Add GitLab Docker registry access to Portainer
 envsubst '$CI_REGISTRY_USER,$CI_REGISTRY_PASSWORD' < gitlab-registry.json > gitlab-registry-final.json
 http --check-status --ignore-stdin --verify=no --timeout=10 POST "$PSU_URL/api/registries" "Authorization: Bearer $PSU_AUTH_TOKEN" @gitlab-registry-final.json
+
 # Add local endpoint to the Portainer instance
-http --check-status --ignore-stdin --verify=no --timeout=10 POST "$PSU_URL/api/endpoints" "Authorization: Bearer $PSU_AUTH_TOKEN" Name==local EndpointType==1
+end_point_type_param=EndpointType
+if [[ "$PORTAINER_VERSION" == "latest" ]] || [ "$(version $PORTAINER_VERSION)" -ge "$(version 2.0)" ]; then
+  # See: https://github.com/portainer/portainer/issues/4602#issuecomment-746819197
+  end_point_type_param=EndpointCreationType
+fi
+http --check-status --ignore-stdin --verify=no --timeout=10 POST "$PSU_URL/api/endpoints" "Authorization: Bearer $PSU_AUTH_TOKEN" Name==local $end_point_type_param==1
 
 # Docker system info from Portainer test
 docker_info=$(psu_wrapper system:info --user $PSU_USER --password $PSU_PASSWORD --url $PSU_URL --insecure --debug false --verbose false)

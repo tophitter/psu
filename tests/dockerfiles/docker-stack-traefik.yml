@@ -1,4 +1,4 @@
-version: '3.6'
+version: '3.7'
 
 services:
   reverse-proxy:
@@ -19,7 +19,7 @@ services:
       - NO_PROXY
     labels:
       - "traefik.enable=true"
-      - traefik.docker.network=traefik-net
+      - traefik.docker.network=psu-traefik-net
       - traefik.http.middlewares.retry-if-fails.retry.attempts=10
       - traefik.http.middlewares.https-only.redirectscheme.scheme=https
       - traefik.http.middlewares.secured.chain.middlewares=retry-if-fails,https-only
@@ -32,7 +32,7 @@ services:
       - "80:80"
       - 443:443
     networks:
-      - traefik-net
+      - psu-traefik-net
     volumes:
      # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
@@ -46,6 +46,6 @@ services:
         delay: 10s
 
 networks:
-  traefik-net:
+  psu-traefik-net:
     driver: overlay
-    name: traefik-net
+    name: psu-traefik-net
