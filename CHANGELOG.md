@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.2.0-alpha] - <abbr title="To Be Announced">TBA</abbr>
+## [1.2.0-alpha] - 2021-02-19
 ### Added
 - Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer <abbr title="Community Edition">CE</abbr> [2.0.1](https://app.swaggerhub.com/apis/deviantony/Portainer/2.0.1) API
 - Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer <abbr title="Community Edition">CE</abbr> [2.1.1](https://app.swaggerhub.com/apis/deviantony/Portainer/2.0.1) API
