@@ -13,9 +13,9 @@ fi
 
 [[ "$TRACE" ]] && set -x
 
-CLUSTER_NAME=${CLUSTER_NAME:-cluster}
-CLUSTER_IP=${CLUSTER_IP:-$(getent hosts $CLUSTER_NAME | awk '{ print $1 }')}
-export BASE_DOMAIN="$CLUSTER_IP.nip.io"
+SWARM_NODE_NAME=${SWARM_NODE_NAME:-cluster}
+SWARM_NODE_IP=${SWARM_NODE_IP:-$(getent hosts $SWARM_NODE_NAME | awk '{ print $1 }')}
+export BASE_DOMAIN="$SWARM_NODE_IP.nip.io"
 export PSU_STACK_NAME="web-app"
 PSU_URL="https://portainer.$BASE_DOMAIN"
 PSU_USER="admin"
@@ -86,7 +86,7 @@ docker swarm init
 # Parse the Docker traefik stack file to deploy
 envsubst '$TRAEFIK_VERSION,$BASE_DOMAIN' < dockerfiles/docker-stack-traefik.yml > dockerfiles/docker-stack-traefik-final.yml
 docker stack deploy -c dockerfiles/docker-stack-traefik-final.yml traefik --with-registry-auth
-bash -c "timeout 20 bash -c 'while ! (echo > /dev/tcp/$CLUSTER_NAME/443 && curl -fks --max-time 2 https://traefik.$BASE_DOMAIN) >/dev/null 2>&1; do sleep 1; done;'"
+bash -c "timeout 20 bash -c 'while ! (echo > /dev/tcp/$SWARM_NODE_NAME/443 && curl -fks --max-time 2 https://traefik.$BASE_DOMAIN) >/dev/null 2>&1; do sleep 1; done;'"
 
 # Deploy Portainer test
 # Create admin password as a Docker secret
