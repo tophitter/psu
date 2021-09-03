@@ -100,11 +100,20 @@ test:portainer-1.24.1:
     PORTAINER_VERSION: 1.24.1
     PORTAINER_COMMAND_OPTIONS: " --no-analytics"
 
-
 test:portainer-2.0.1:
   <<: *test_definition
   variables:
     PORTAINER_VERSION: 2.0.1
+
+test:portainer-2.1.1:
+  <<: *test_definition
+  variables:
+    PORTAINER_VERSION: 2.1.1
+
+test:portainer-2.5.1:
+  <<: *test_definition
+  variables:
+    PORTAINER_VERSION: 2.5.1
 
 test:portainer-latest:
   <<: *test_definition
