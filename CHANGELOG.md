@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Use Docker [Compose 1.29.3](https://github.com/docker/compose/releases/tag/1.29.2) instead of Docker [Compose 1.28.3](https://github.com/docker/compose/releases/tag/1.28.3)
+- Upgrade Operating System of Docker based images, with [Alpine 3.14](https://hub.docker.com/_/alpine) and [Debian 11](https://hub.docker.com/_/debian)
+- Reduce Docker images size
+
 ## [1.2.0-alpha] - 2021-02-19
 ### Added
 - Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer <abbr title="Community Edition">CE</abbr> [2.0.1](https://app.swaggerhub.com/apis/deviantony/Portainer/2.0.1) API

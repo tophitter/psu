@@ -1,14 +1,17 @@
-FROM alpine:3.13
+FROM alpine:3.14
+
+ARG DOCKER_COMPOSE_VERSION_GTE=1.29.2
+ARG DOCKER_COMPOSE_VERSION_LT=1.30.0
 
 RUN set -e; \
     apk add --no-cache \
       bash ca-certificates gettext jq \
-      py3-pip python3-dev libc-dev libffi-dev openssl-dev gcc make musl-dev cargo; \
+      py3-pip python3-dev libc-dev libffi-dev openssl-dev gcc make musl-dev py3-wheel; \
     \
-    pip3 --no-cache-dir install 'docker-compose>=1.28.3,<1.29.0' 'httpie>=1.0.3,<1.1.0' 'cryptography>=3.3.2,<3.4.0'; \
+    pip3 --no-cache-dir install "docker-compose>=${DOCKER_COMPOSE_VERSION_GTE},<${DOCKER_COMPOSE_VERSION_LT}" "httpie>=1.0.3,<1.1.0" "cryptography>=3.3.2,<3.4.0"; \
     \
-    apk del python3-dev libc-dev libffi-dev openssl-dev gcc make musl-dev cargo; \
-    rm -rf /tmp/src
+    apk del python3-dev libc-dev libffi-dev openssl-dev gcc make musl-dev py3-wheel; \
+    rm -rf $(find / -regex '.*\.py[co]')
 
 ENV LANG="en_US.UTF-8" \
     LC_ALL="C.UTF-8" \

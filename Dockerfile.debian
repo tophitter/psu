@@ -1,16 +1,19 @@
-FROM debian:10-slim
+FROM debian:11-slim
+
+ARG DOCKER_COMPOSE_VERSION=1.29.2
 
 RUN set -e; \
     apt-get update -yqq; \
     apt-get install \
       ca-certificates gettext-base httpie jq curl -yqq; \
     \
-    curl -fL "https://github.com/docker/compose/releases/download/1.28.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose; \
+    curl -fL "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose; \
     chmod +x /usr/local/bin/docker-compose; \
     \
     apt-get purge curl -y; \
     apt-get clean; \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/*; \
+    rm -rf $(find / -regex '.*\.py[co]')
 
 ENV LANG="en_US.UTF-8" \
     LC_ALL="C.UTF-8" \

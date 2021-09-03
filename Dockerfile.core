@@ -1,8 +1,10 @@
-FROM alpine:3.13
+FROM alpine:3.14
 
 RUN set -e; \
     apk add --no-cache \
-      bash ca-certificates gettext httpie jq
+      bash ca-certificates gettext jq py3-pip; \
+    pip3 --no-cache-dir install httpie; \
+    rm -rf $(find / -regex '.*\.py[co]')
 
 ENV LANG="en_US.UTF-8" \
     LC_ALL="C.UTF-8" \

@@ -1,4 +1,4 @@
-FROM debian:10-slim
+FROM debian:11-slim
 
 RUN set -e; \
     apt-get update -yqq; \
@@ -6,7 +6,8 @@ RUN set -e; \
       ca-certificates gettext-base httpie jq -yqq; \
     \
     apt-get clean; \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/*; \
+    rm -rf $(find / -regex '.*\.py[co]')
 
 ENV LANG="en_US.UTF-8" \
     LC_ALL="C.UTF-8" \
