@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use Docker [Compose 1.29.3](https://github.com/docker/compose/releases/tag/1.29.2) instead of Docker [Compose 1.28.3](https://github.com/docker/compose/releases/tag/1.28.3)
 - Upgrade Operating System of Docker based images, with [Alpine 3.14](https://hub.docker.com/_/alpine) and [Debian 11](https://hub.docker.com/_/debian)
 - Reduce Docker images size
+- Use [Traefik 2.5](https://doc.traefik.io/traefik/v2.5) instead of [Traefik 2.4](https://doc.traefik.io/traefik/v2.4) for testing
 
 ### Fixed
 - Fix [`rm`](docs/README.md#rm) <small>(remove)</small> action with Portainer <abbr title="Community Edition">CE</abbr> 2.6

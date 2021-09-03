@@ -3,7 +3,7 @@ image: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/hub/auto-deploy-image:latest
 variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: "/certs"
-  TRAEFIK_VERSION: "2.4"
+  TRAEFIK_VERSION: "2.5"
   PORTAINER_IMAGE: "portainer/portainer-ce"
   PORTAINER_VERSION: latest
   PORTAINER_COMMAND_OPTIONS: ""
