@@ -1096,7 +1096,8 @@ undeploy() {
     --ignore-stdin \
     --verify=$HTTPIE_VERIFY_SSL \
     DELETE "$PORTAINER_URL/api/stacks/$stack_id" \
-    "Authorization: Bearer $PORTAINER_AUTH_TOKEN")
+    "Authorization: Bearer $PORTAINER_AUTH_TOKEN" \
+    endpointId==$PORTAINER_ENDPOINT)
   check_for_errors $? "$delete"
   echo_debug "Delete action response -> $(echo $delete | jq -C .)"
 }
