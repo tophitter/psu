@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Use Docker [Compose 1.28.3](https://github.com/docker/compose/releases/tag/1.28.3) instead of Docker [Compose 1.26.2](https://github.com/docker/compose/releases/tag/1.26.2)
 - Use [Traefik 2.4](https://docs.traefik.io/traefik/) instead of [Traefik 2.2](https://docs.traefik.io/traefik/v2.2/) for testing
-- Upgrade operating system of Docker based images, with [Alpine 3.13](https://hub.docker.com/_/alpine)
+- Upgrade Operating System of Docker based images, with [Alpine 3.13](https://hub.docker.com/_/alpine)
 
 ### Removed
 - Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer [1.22.2](https://app.swaggerhub.com/apis/deviantony/Portainer/1.22.2) API
@@ -42,7 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.0-alpha] - 2020-07-29
 ### Changed
-- Upgrade operating system of Docker based images, with [Alpine 3.12](https://hub.docker.com/_/alpine) and [Debian 10](https://hub.docker.com/_/debian)
+- Upgrade Operating System of Docker based images, with [Alpine 3.12](https://hub.docker.com/_/alpine) and [Debian 10](https://hub.docker.com/_/debian)
 
 ### Fixed
 - Docker build should fail if a shell command failed
