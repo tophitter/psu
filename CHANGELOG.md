@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Use Docker [Compose 1.28.3](https://github.com/docker/compose/releases/tag/1.28.3) instead of Docker [Compose 1.26.2](https://github.com/docker/compose/releases/tag/1.26.2)
-- Use [Traefik 2.4](https://docs.traefik.io/traefik/) instead of [Traefik 2.2](https://docs.traefik.io/traefik/v2.2/) for testing
+- Use [Traefik 2.4](https://doc.traefik.io/traefik/v2.4) instead of [Traefik 2.2](https://doc.traefik.io/traefik/v2.2) for testing
 - Upgrade Operating System of Docker based images, with [Alpine 3.13](https://hub.docker.com/_/alpine)
 
 ### Removed
@@ -35,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.0] - 2021-02-18
 ### Changed
-- Use [Traefik 2.2](https://docs.traefik.io/v2.2/) instead of [Traefik 2.1](https://docs.traefik.io/v2.1/) for testing
+- Use [Traefik 2.2](https://doc.traefik.io/traefik/v2.2) instead of [Traefik 2.1](https://doc.traefik.io/traefik/v2.1) for testing
 
 ### Fixed
 - Changelog link for `psu` version `1.1.0-alpha`
@@ -79,7 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Cleaning old Docker repository builds tags via [GitLab API](https://docs.gitlab.com/12.6/ee/api/container_registry.html#delete-repository-tags-in-bulk)
 
 ### Changed
-- Use [Traefik 2.1](https://docs.traefik.io/v2.1/) instead of [Traefik 1.7](https://docs.traefik.io/v1.7/) for testing
+- Use [Traefik 2.1](https://doc.traefik.io/traefik/v2.1) instead of [Traefik 1.7](https://doc.traefik.io/traefik/v1.7) for testing
 
 ### Fixed
 - Build script for the latest stable git tag of a given git branch
