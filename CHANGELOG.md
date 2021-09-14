@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - **Breaking Change**: [HTTPie](https://httpie.io/) is replaced by [cURL](https://curl.se), for smaller Docker images, faster execution and to be more portable
+- Boost performance for some actions like `status`, `tasks` and `tasks:healthy`, with parallel requests
 
 ### Fixed
 - Running concurrently `psu` commands should work now, by creating unique temporary file names
@@ -134,7 +135,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `undeploy` action is now an aliased action. You should use `rm` action instead
 
 ### Deprecated
-- The `--secure=[yes|no]` option and `-s` flag are deprecated. Use the `--insecure` option instead (`psu <action> ... --inscure`)
+- The `--secure=[yes|no]` option and `-s` flag are deprecated. Use the `--insecure` option instead (`psu <action> ... --insecure`)
 - The `--action=[ACTION_NAME]` option and `-a` flag are deprecated. Use `<action>` argument instead (`psu <action> ...`)
 
 ## [0.1.2] - 2019-10-29
