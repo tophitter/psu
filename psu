@@ -1234,9 +1234,15 @@ tasks() {
 tasks_healthy() {
   local tasks_running
   tasks_running=$(tasks 'running' 'running')
+  if [ $? -ne 0 ]; then
+    exit 0
+  fi
   local tasks_job_complete
   tasks_job_complete=$(tasks 'shutdown' 'complete')
-  echo "$(echo "${tasks_running}${tasks_job_complete}" | jq -sjc 'add | unique_by(.ID)')"
+  if [ $? -ne 0 ]; then
+    exit 0
+  fi
+  echo "${tasks_running}${tasks_job_complete}" | jq -sjc 'add | unique_by(.ID)'
 }
 
 services() {

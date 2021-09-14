@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Running concurrently `psu` commands should work now, by creating unique temporary file names
+- Fix `psu tasks:healthy` action output, when an error occurs
 
 ## [1.2.0] - 2021-09-14
 ### Added
