@@ -32,11 +32,16 @@ _Based on previous work by [@vladbabii](https://github.com/vladbabii) on [docker
 ### Standalone
 
 Just clone the repo and use the script:
-
 ```bash
 git clone https://gitlab.com/psuapp/psu.git
 cd psu/
-bash ./psu deploy ...
+# Allow the 'psu' command to run everywhere:
+export PATH="$(pwd):$PATH"
+# Or if you want it permanent, with a super user account, run:
+# ln -s $(pwd)/psu /usr/local/bin
+#
+# Then you can use psu, e.g.
+psu deploy ...
 ```
 
 For detailed instructions, see [How to use](#how-to-use) section.
@@ -48,8 +53,9 @@ You will need these dependencies installed:
 - [bash](https://www.gnu.org/software/bash/)
 - [httpie](https://httpie.org/)
 - [jq](https://stedolan.github.io/jq/)
+- [timeout](https://man7.org/linux/man-pages/man1/timeout.1.html) <small>For macOS run: `brew install coreutils`</small>
 
-For Debian and similar apt-powered systems: `apt install bash httpie jq`.
+For Debian and similar apt-powered systems: `apt install bash httpie jq`
 
 ### Docker image and variants
 
@@ -130,11 +136,11 @@ For detailed instructions, see the full [options list](docs/README.md#available-
 #### Examples
 
 ```bash
-bash ./psu deploy --user admin --password password --url https://portainer.local --name mystack --compose-file /path/to/docker-compose.yml --env-file /path/to/env_vars_file
+psu deploy --user admin --password password --url https://portainer.local --name mystack --compose-file /path/to/docker-compose.yml --env-file /path/to/env_vars_file
 ```
 
 ```bash
-bash ./psu rm --user admin --password password --url https://portainer.local --name mystack
+psu rm --user admin --password password --url https://portainer.local --name mystack
 ```
 
 **With Docker:**
@@ -158,11 +164,11 @@ For detailed instructions, see the full [flags list](docs/README.md#available-op
 #### Examples
 
 ```bash
-bash ./psu deploy -u admin -p password -l https://portainer.local -n mystack -c /path/to/docker-compose.yml -g /path/to/env_vars_file
+psu deploy -u admin -p password -l https://portainer.local -n mystack -c /path/to/docker-compose.yml -g /path/to/env_vars_file
 ```
 
 ```bash
-bash ./psu rm -u admin -p password -l https://portainer.local -n mystack
+psu rm -u admin -p password -l https://portainer.local -n mystack
 ```
 
 **With Docker:**
@@ -194,7 +200,7 @@ export PORTAINER_STACK_NAME="mystack"
 export DOCKER_COMPOSE_FILE="/path/to/docker-compose.yml"
 export ENVIRONMENT_VARIABLES_FILE="/path/to/env_vars_file"
 
-bash ./psu
+psu
 ```
 
 ```bash
@@ -204,7 +210,7 @@ export PORTAINER_PASSWORD="password"
 export PORTAINER_URL="https://portainer.local"
 export PORTAINER_STACK_NAME="mystack"
 
-bash ./psu
+psu
 ```
 
 **With Docker:**

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Downgrade Docker Compose from [1.29.2](https://github.com/docker/compose/releases/tag/1.29.2) to [1.28.0](https://github.com/docker/compose/releases/tag/1.28.0) for Alpine image, to get faster builds 🚀
 - Reduce Docker images size based on Alpine, again
+- Better documentation
 
 ### Fixed
 - Tests should run fine now with macOS
