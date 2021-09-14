@@ -68,16 +68,19 @@ function version {
 }
 
 # Leave Docker Swarm, if already set
-docker swarm leave --force && sleep 3 | true
+(docker swarm leave --force && sleep 3) || true
 
 # Remove admin password from Docker secrets, if already set
-docker secret rm psu-portainer-password | true
+docker secret rm psu-portainer-password || true
+
+# Delete all stopped containers
+docker rm -f $(docker ps -a -q) || true
 
 # Remove portainer data, if already set
-docker volume rm --force portainer_psu-portainer && sleep 2 | true
+(docker volume rm --force portainer_psu-portainer && sleep 2) || true
 
 # Remove web-app data, if already set
-docker volume rm --force web-app_psu-php-runner && sleep 2 | true
+(docker volume rm --force web-app_psu-php-runner && sleep 2) || true
 
 # Init Docker Swarm
 docker swarm init
@@ -103,11 +106,12 @@ psu_wrapper --version | grep -E 'version v?[0-9]+\.[0-9]+\.[0-9]+'
 
 # psu help test
 # Check if 4 terms present in the help message are visible when running the command
-[ "$(psu_wrapper --help | grep -E 'Usage|Arguments|Options|Available actions' | wc -l)" == "4" ]
+[ "$(psu_wrapper --help | grep -E 'Usage|Arguments|Options|Available actions' | wc -l | tr -d ' ')" == "4" ]
 
-# TODO: test 'actions' action
-# TODO: test 'services' action
-# TODO: test 'containers' action
+# psu 'actions' action test
+# Check if some of the available actions of psu
+# are visible when running the 'actions' command
+[ "$(psu_wrapper actions | grep -E '  deploy | rm |  ls |  status |  services |  tasks |  actions ' | wc -l | tr -d ' ')" == "7" ]
 
 # Portainer login test
 PSU_AUTH_TOKEN=$(psu_wrapper login --user $PSU_USER --password $PSU_PASSWORD --url $PSU_URL --insecure)
@@ -158,6 +162,19 @@ stack_envvars="$(echo -n "$stack_info" | jq ".Env" -jc)"
 # List deployed stacks with quiet mode test
 stack_list="$(psu_wrapper ls --user $PSU_USER --password $PSU_PASSWORD --url $PSU_URL --insecure --debug false --verbose false --quiet)"
 [ "$stack_list" == "$PSU_STACK_NAME" ]
+
+# psu 'services' action test
+# The current stack should have 3 services:
+# 'web-app_app', 'web-app_job' and 'web-app_web'
+[ "$(psu_wrapper services --user=$PSU_USER --password=$PSU_PASSWORD --url=$PSU_URL --name=$PSU_STACK_NAME --insecure --debug false --verbose false --quiet | wc -l | tr -d ' ')" == "3" ]
+
+# psu 'tasks:healthy' action test
+# The current stack should have 3 healthy tasks:
+[ "$(psu_wrapper tasks:healthy --user=$PSU_USER --password=$PSU_PASSWORD --url=$PSU_URL --name=$PSU_STACK_NAME --insecure --debug false --verbose false --quiet | wc -l | tr -d ' ')" == "3" ]
+
+# psu 'containers' action test
+# The current stack should have 2 running containers:
+[ "$(psu_wrapper containers --user=$PSU_USER --password=$PSU_PASSWORD --url=$PSU_URL --name=$PSU_STACK_NAME --insecure --debug false --verbose false --quiet | wc -l | tr -d ' ')" == "2" ]
 
 # Convert env file in a base64 encoded string,
 # due to some limitations with Docker in Docker and volumes

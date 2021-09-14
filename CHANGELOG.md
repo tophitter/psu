@@ -5,10 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Add tests for `actions`, `containers` and `services` actions
+
 ### Changed
 - Downgrade Docker Compose from [1.29.2](https://github.com/docker/compose/releases/tag/1.29.2) to [1.28.0](https://github.com/docker/compose/releases/tag/1.28.0) for Alpine image, to get faster builds 🚀
 - Reduce Docker images size based on Alpine, again
 
+### Fixed
+- Tests should run fine now with macOS
 
 ## [1.2.0-beta.1] - 2021-09-03
 ### Added
