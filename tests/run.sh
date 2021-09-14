@@ -118,7 +118,16 @@ PSU_AUTH_TOKEN=$(psu_wrapper login --user $PSU_USER --password $PSU_PASSWORD --u
 
 # Add GitLab Docker registry access to Portainer
 envsubst '$CI_REGISTRY_USER,$CI_REGISTRY_PASSWORD' < gitlab-registry.json > gitlab-registry-final.json
-http --check-status --ignore-stdin --verify=no --timeout=10 POST "$PSU_URL/api/registries" "Authorization: Bearer $PSU_AUTH_TOKEN" @gitlab-registry-final.json
+curl \
+  --fail \
+  --silent \
+  --insecure \
+  --max-time 10 \
+  --request POST \
+  --header "Authorization: Bearer ${PSU_AUTH_TOKEN}" \
+  --header "Content-Type: application/json" \
+  --data "@gitlab-registry-final.json" \
+  "${PSU_URL}/api/registries"
 
 # Add local endpoint to the Portainer instance
 end_point_type_param=EndpointType
@@ -126,7 +135,15 @@ if [[ "$PORTAINER_VERSION" == "latest" ]] || [ "$(version $PORTAINER_VERSION)" -
   # See: https://github.com/portainer/portainer/issues/4602#issuecomment-746819197
   end_point_type_param=EndpointCreationType
 fi
-http --check-status --ignore-stdin --verify=no --timeout=10 POST "$PSU_URL/api/endpoints" "Authorization: Bearer $PSU_AUTH_TOKEN" Name==local $end_point_type_param==1
+curl \
+  --fail \
+  --silent \
+  --insecure \
+  --max-time 10 \
+  --request POST \
+  --header "Authorization: Bearer ${PSU_AUTH_TOKEN}" \
+  --header "Content-Type: application/json" \
+  "${PSU_URL}/api/endpoints?Name=local&${end_point_type_param}=1"
 
 # Docker system info from Portainer test
 docker_info=$(psu_wrapper system:info --user $PSU_USER --password $PSU_PASSWORD --url $PSU_URL --insecure --debug false --verbose false)

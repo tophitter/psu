@@ -2,8 +2,7 @@ FROM alpine:3.14
 
 RUN set -e; \
     apk add --no-cache \
-      bash ca-certificates gettext httpie jq py3-setuptools; \
-    rm -rf $(find / -regex '.*\.py[co]')
+      bash ca-certificates curl gettext jq
 
 ENV LANG="en_US.UTF-8" \
     LC_ALL="C.UTF-8" \

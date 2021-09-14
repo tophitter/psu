@@ -115,12 +115,10 @@ main() {
 
     # Get list of all stacks
     echo_verbose "Getting stack $PORTAINER_STACK_NAME..."
-    STACKS=$(http \
-      --check-status \
-      --ignore-stdin \
-      --verify=$HTTPIE_VERIFY_SSL \
-      "$PORTAINER_URL/api/stacks" \
-      "Authorization: Bearer $PORTAINER_AUTH_TOKEN")
+    STACKS=$(curl_wrapper \
+      --request GET \
+      --header "Authorization: Bearer ${PORTAINER_AUTH_TOKEN}" \
+      "${PORTAINER_URL}/api/stacks")
     check_for_errors $? "$STACKS"
     echo_debug_safe_json "Get stacks response -> $(echo $STACKS | jq -C .)" "$STACKS"
 
@@ -187,8 +185,7 @@ main() {
       # or desired state == 'shutdown' and state == 'complete'
       # Tasks should not have one of these states:
       # 'failed', 'orphaned', 'remove'
-
-      timeout $TIMEOUT bash -c "until (export PORTAINER_SERVICE_NAME=$PORTAINER_SERVICE_NAME && export DEBUG_MODE=false && export VERBOSE_MODE=false && psu -a tasks:healthy -q) >/dev/null 2>&1; do echo -n \$(if [ \"\$VERBOSE_MODE\" == \"true\" ]; then echo -n .; fi) && sleep 1; done;"
+      timeout "$TIMEOUT" bash -c "until (export PORTAINER_SERVICE_NAME=$PORTAINER_SERVICE_NAME && psu --action=tasks:healthy --quiet --debug=false --verbose=false) >/dev/null 2>&1; do echo -n \$(if [ \"\$VERBOSE_MODE\" == \"true\" ]; then echo -n .; fi) && sleep 1; done;"
       status=$?
 
       if $(exit $status); then
@@ -460,8 +457,10 @@ inputs() {
       -C=*|-F=*|--compose-file-base64=*|--file-base64=*|-C|-F|--compose-file-base64|--file-base64)
         local docker_compose_file_base64
         docker_compose_file_base64=$(input_option "$1" "$2")
-        echo "$docker_compose_file_base64" | base64 -d > docker_compose_file_from_base64.yml
-        DOCKER_COMPOSE_FILE=docker_compose_file_from_base64.yml
+        local docker_compose_file_from_base64_path
+        docker_compose_file_from_base64_path="$(unique_temp_file_path)"
+        echo "$docker_compose_file_base64" | base64 -d > "$docker_compose_file_from_base64_path"
+        DOCKER_COMPOSE_FILE="$docker_compose_file_from_base64_path"
         if [ -n "$2" ] && [[ ! $2 =~ ^-.+$ ]] ; then
           # When the second argument is the value of the current option
           shift
@@ -484,8 +483,10 @@ inputs() {
       -G=*|--env-file-base64=*|-G|--env-file-base64)
         local env_file_base64
         env_file_base64=$(input_option "$1" "$2")
-        echo "$env_file_base64" | base64 -d > env_file_from_base64
-        ENVIRONMENT_VARIABLES_FILE=env_file_from_base64
+        local env_file_from_base64_path
+        env_file_from_base64_path="$(unique_temp_file_path)"
+        echo "$env_file_base64" | base64 -d > "$env_file_from_base64_path"
+        ENVIRONMENT_VARIABLES_FILE="$env_file_from_base64_path"
         if [ -n "$2" ] && [[ ! $2 =~ ^-.+$ ]] ; then
           # When the second argument is the value of the current option
           shift
@@ -741,6 +742,7 @@ echo_error() {
   local error_message="$@"
   local red='\033[0;31m'
   local nc='\033[0m'
+
   echo -e "${red}[$(date +'%Y-%m-%dT%H:%M:%S%z')]: ${error_message}${nc}" >&2
 }
 
@@ -785,18 +787,15 @@ check_for_errors() {
   local response=$2
   if [ $exit_code -ne 0 ]; then
     case $exit_code in
-        2) echo_error 'Request timed out!' ;;
-        3) echo_error 'Unexpected HTTP 3xx Redirection!' ;;
-        4)
-          echo_error 'HTTP 4xx Client Error!'
-          echo_error $response
+        22)
+          echo_error 'HTTP 4xx or 5xx Client Error!'
+          echo_error "$response"
+         ;;
+        28) echo_error 'Request timed out!' ;;
+        47) echo_error 'Exceeded --max-redirs <n> redirects!' ;;
+        *)
+          echo_error 'Unholy Error!'
           ;;
-        5)
-          echo_error 'HTTP 5xx Server Error!'
-          echo_error $response
-          ;;
-        6) echo_error 'Exceeded --max-redirects=<n> redirects!' ;;
-        *) echo_error 'Unholy Error!' ;;
     esac
     exit 1
   fi
@@ -819,10 +818,10 @@ echo_safe_json() {
   # If the $json variable has an '.Env' entry
   # We parse its content to mask sensitive values
   if [ "$MASKED_VARIABLES" == "extended" ] && [ -n "$(echo "$json" | jq -j 'if type == "array" then .[] else . end | .Env // ""')" ]; then
-    temp_file=".stack_envs-$(echo "$(date +%s%3N)")"
+    temp_file="$(unique_temp_file_path)"
     (
-      echo "$json" | jq -r 'if type == "array" then .[] else . end | .Env | map(.name = .name + "=" + .value) | map (.name) | .[]' | sed "s/\"/\\\\\"/g" | sed "s/^\([^=]\{1,\}=\)\(.* .*\)$/\1\"\2\"/" > $temp_file && \
-      . $temp_file &&  rm -f $temp_file && \
+      echo "$json" | jq -r 'if type == "array" then .[] else . end | .Env | map(.name = .name + "=" + .value) | map (.name) | .[]' | sed "s/\"/\\\\\"/g" | sed "s/^\([^=]\{1,\}=\)\(.* .*\)$/\1\"\2\"/" > "$temp_file" && \
+      . "$temp_file" &&  rm -f "$temp_file" && \
       if [ "$type" == "debug" ]; then \
         echo_debug "$message"; \
       elif [ "$type" == "verbose" ]; then \
@@ -906,6 +905,75 @@ mask_variables() {
   echo "$message"
 }
 
+unique_temp_file_path() {
+  local file_prefix="psu"
+  local fallback_temp_path
+  local temp_path
+  local temp_file_path
+
+  fallback_temp_path="$(if [ -w "/tmp" ]; then echo "/tmp"; else pwd; fi)"
+  temp_path="${TMPDIR:-${TMP:-${TEMP:-$fallback_temp_path}}}"
+  if [ -w "$temp_path" ]; then
+    local file_uuid
+    # Generate universally unique identifier (UUID)
+    file_uuid=$(if [ -x "$(command -v uuidgen)" ]; then uuidgen; else cat /proc/sys/kernel/random/uuid; fi)
+    if [ -z "$file_uuid" ]; then
+      echo_error "You must install the 'uuidgen' program, to generate universally unique identifier"
+      exit 1
+    fi
+    # Unique temp file path
+    temp_file_path="${temp_path}/${file_prefix}_${file_uuid}.tmp"
+  else
+    echo_error "'${temp_path}' path is NOT WRITABLE!"
+    exit 1
+  fi
+
+  echo "$temp_file_path"
+}
+
+curl_wrapper() {
+  local result
+  # Use --fail-with-body cURL option if available
+  # And use environment variable to cache result
+  CURL_HAS_FAIL_WITH_BODY="${CURL_HAS_FAIL_WITH_BODY:-$(curl --help all | grep -w '\-\-fail\-with\-body' || true)}"
+  export CURL_HAS_FAIL_WITH_BODY
+
+  # Otherwise fallback to a temp result file storing
+  # Borrowed from: https://stackoverflow.com/a/55434980
+  local result_response_file
+  if [ -z "$CURL_HAS_FAIL_WITH_BODY" ]; then
+    result_response_file="$(unique_temp_file_path)"
+  fi
+
+  local curl_fail_params
+  curl_fail_params=$(if [ -n "$CURL_HAS_FAIL_WITH_BODY" ]; then echo --fail-with-body; else echo --output "$result_response_file" --write-out %\{http_code\}; fi)
+
+  result="$(curl \
+    $curl_fail_params \
+    --header "Content-Type: application/json" \
+    --silent \
+    $(if [ "$HTTPIE_VERIFY_SSL" == "no" ]; then echo --insecure; else $(if [ -f "$HTTPIE_VERIFY_SSL" ]; then echo --cacert "$HTTPIE_VERIFY_SSL"; else echo ''; fi); fi) \
+    "$@")"
+
+  result_exit_code="$?"
+  if [ -n "$result_response_file" ]; then
+    local response
+    response="$(cat "$result_response_file")"
+    rm -f "$result_response_file"
+    local response_result
+    response_result="$result"
+    result="$response"
+    echo "$result"
+    if [ "$response_result" -ge 400 ] && [ "$response_result" -le 599 ]; then
+      exit 22
+    fi
+    exit "$result_exit_code"
+  else
+    echo "$result"
+    exit "$result_exit_code"
+  fi
+}
+
 ###################################################
 ############### actions section ###################
 ###################################################
@@ -938,6 +1006,9 @@ deploy() {
   echo_debug "DOCKER_COMPOSE_FILE -> $DOCKER_COMPOSE_FILE"
   echo_debug "docker_compose_file_content -> $docker_compose_file_content"
 
+  local json_temp_path
+  json_temp_path="$(unique_temp_file_path)"
+
   # If the stack does not exist
   if [ -z "$STACK" ]; then
     echo_verbose "Stack $PORTAINER_STACK_NAME does not exist."
@@ -967,23 +1038,19 @@ deploy() {
       fi
       local data_prefix="{\"Name\":\"$PORTAINER_STACK_NAME\","
       local data_suffix=",\"Env\":"$stack_envvars"}"
-      echo "$data_prefix$docker_compose_file_content$data_suffix" > json.tmp
+      echo "$data_prefix$docker_compose_file_content$data_suffix" > "$json_temp_path"
       echo_debug_safe_json "Stack JSON -> $(echo $data_prefix$docker_compose_file_content$data_suffix | jq -C .)" "$data_prefix$docker_compose_file_content$data_suffix"
 
       # Create stack for single Docker instance
       echo_verbose "Creating stack $PORTAINER_STACK_NAME..."
       local create
-      create=$(http \
-        --check-status \
-        --ignore-stdin \
-        --verify=$HTTPIE_VERIFY_SSL \
-        --timeout=300 \
-        "$PORTAINER_URL/api/stacks" \
-        "Authorization: Bearer $PORTAINER_AUTH_TOKEN" \
-        type==2 \
-        method==string \
-        endpointId==$PORTAINER_ENDPOINT \
-        @json.tmp)
+      create=$(curl_wrapper \
+        --max-time 300 \
+        --request POST \
+        --header "Authorization: Bearer ${PORTAINER_AUTH_TOKEN}" \
+        --data "@${json_temp_path}" \
+        "${PORTAINER_URL}/api/stacks?type=2&method=string&endpointId=${PORTAINER_ENDPOINT}")
+
       check_for_errors $? "$create"
       echo_debug "Create action response -> $(echo $create | jq -C .)"
     else
@@ -997,28 +1064,23 @@ deploy() {
       fi
       local data_prefix="{\"Name\":\"$PORTAINER_STACK_NAME\",\"SwarmID\":\"$swarm_id\","
       local data_suffix=",\"Env\":"$stack_envvars"}"
-      echo "$data_prefix$docker_compose_file_content$data_suffix" > json.tmp
+      echo "$data_prefix$docker_compose_file_content$data_suffix" > "$json_temp_path"
       echo_debug_safe_json "Stack JSON -> $(echo $data_prefix$docker_compose_file_content$data_suffix | jq -C .)" "$data_prefix$docker_compose_file_content$data_suffix"
 
       # Create stack for Docker swarm
       echo_verbose "Creating stack $PORTAINER_STACK_NAME..."
       local create
-      create=$(http \
-        --check-status \
-        --ignore-stdin \
-        --verify=$HTTPIE_VERIFY_SSL \
-        --timeout=300 \
-        "$PORTAINER_URL/api/stacks" \
-        "Authorization: Bearer $PORTAINER_AUTH_TOKEN" \
-        type==1 \
-        method==string \
-        endpointId==$PORTAINER_ENDPOINT \
-        @json.tmp)
+      create=$(curl_wrapper \
+        --max-time 300 \
+        --request POST \
+        --header "Authorization: Bearer ${PORTAINER_AUTH_TOKEN}" \
+        --data "@${json_temp_path}" \
+        "${PORTAINER_URL}/api/stacks?type=1&method=string&endpointId=${PORTAINER_ENDPOINT}")
       check_for_errors $? "$create"
       echo_debug "Create action response -> $(echo $create | jq -C .)"
     fi
 
-    rm json.tmp
+    rm -f "$json_temp_path"
   else
     if [ $STRICT_MODE == "true" ]; then
       echo_error "Error: Stack $PORTAINER_STACK_NAME already exists."
@@ -1038,25 +1100,22 @@ deploy() {
     fi
     local data_prefix="{\"Id\":\"$stack_id\","
     local data_suffix=",\"Env\":"$stack_envvars",\"Prune\":$PORTAINER_PRUNE}"
-    echo "$data_prefix$docker_compose_file_content$data_suffix" > json.tmp
+    echo "$data_prefix$docker_compose_file_content$data_suffix" > "$json_temp_path"
     echo_debug_safe_json "Stack JSON -> $(echo $data_prefix$docker_compose_file_content$data_suffix | jq -C .)" "$data_prefix$docker_compose_file_content$data_suffix"
 
     # Update stack
     echo_verbose "Updating stack $PORTAINER_STACK_NAME..."
     local update
-    update=$(http \
-      --check-status \
-      --ignore-stdin \
-      --verify=$HTTPIE_VERIFY_SSL \
-      --timeout=300 \
-      PUT "$PORTAINER_URL/api/stacks/$stack_id" \
-      "Authorization: Bearer $PORTAINER_AUTH_TOKEN" \
-      endpointId==$PORTAINER_ENDPOINT \
-      @json.tmp)
+    update=$(curl_wrapper \
+      --max-time 300 \
+      --request PUT \
+      --header "Authorization: Bearer ${PORTAINER_AUTH_TOKEN}" \
+      --data "@${json_temp_path}" \
+      "${PORTAINER_URL}/api/stacks/${stack_id}?endpointId=${PORTAINER_ENDPOINT}")
     check_for_errors $? "$update"
     echo_debug "Update action response -> $(echo $update | jq -C .)"
 
-    rm json.tmp
+    rm -f "$json_temp_path"
   fi
 }
 
@@ -1091,13 +1150,10 @@ undeploy() {
 
   echo_verbose "Deleting stack $PORTAINER_STACK_NAME..."
   local delete
-  delete=$(http \
-    --check-status \
-    --ignore-stdin \
-    --verify=$HTTPIE_VERIFY_SSL \
-    DELETE "$PORTAINER_URL/api/stacks/$stack_id" \
-    "Authorization: Bearer $PORTAINER_AUTH_TOKEN" \
-    endpointId==$PORTAINER_ENDPOINT)
+  delete=$(curl_wrapper \
+    --request DELETE \
+    --header "Authorization: Bearer ${PORTAINER_AUTH_TOKEN}" \
+    "${PORTAINER_URL}/api/stacks/${stack_id}?endpointId=${PORTAINER_ENDPOINT}")
   check_for_errors $? "$delete"
   echo_debug "Delete action response -> $(echo $delete | jq -C .)"
 }
@@ -1106,13 +1162,10 @@ undeploy() {
 login() {
   echo_verbose "Getting auth token..."
   local auth_token_json
-  auth_token_json=$(http \
-    --check-status \
-    --ignore-stdin \
-    --verify=$HTTPIE_VERIFY_SSL \
-    $PORTAINER_URL/api/auth \
-    username=$PORTAINER_USER \
-    password=$PORTAINER_PASSWORD)
+  auth_token_json=$(curl_wrapper \
+    --request POST \
+    --data "{\"username\":\"${PORTAINER_USER}\",\"password\":\"${PORTAINER_PASSWORD}\"}" \
+    "${PORTAINER_URL}/api/auth")
   check_for_errors $? "$auth_token_json"
   PORTAINER_AUTH_TOKEN=$(echo $auth_token_json | jq -r .jwt)
   echo_debug "Get auth token response -> $(echo $auth_token_json | jq -C .)"
@@ -1126,12 +1179,10 @@ login() {
 # Get Docker info
 docker_info() {
   local docker_info
-  docker_info=$(http \
-    --check-status \
-    --ignore-stdin \
-    --verify=$HTTPIE_VERIFY_SSL \
-    "$PORTAINER_URL/api/endpoints/$PORTAINER_ENDPOINT/docker/info" \
-    "Authorization: Bearer $PORTAINER_AUTH_TOKEN")
+  docker_info=$(curl_wrapper \
+    --request GET \
+    --header "Authorization: Bearer ${PORTAINER_AUTH_TOKEN}" \
+    "${PORTAINER_URL}/api/endpoints/${PORTAINER_ENDPOINT}/docker/info")
   check_for_errors $? "$docker_info"
 
   echo "$docker_info"
@@ -1151,13 +1202,12 @@ tasks() {
   local filters
   filters="{$filter_service$(if [ -n "$filter_desired_state" ]; then echo ",$filter_desired_state"; fi)}"
   local tasks
-  tasks=$(http \
-    --check-status \
-    --ignore-stdin \
-    --verify=$HTTPIE_VERIFY_SSL \
-    "$PORTAINER_URL/api/endpoints/$PORTAINER_ENDPOINT/docker/tasks" \
-    filters=="$filters" \
-    "Authorization: Bearer $PORTAINER_AUTH_TOKEN")
+  tasks=$(curl_wrapper \
+    --request GET \
+    --get \
+    --header "Authorization: Bearer ${PORTAINER_AUTH_TOKEN}" \
+    --data-urlencode "filters=${filters}" \
+    "${PORTAINER_URL}/api/endpoints/${PORTAINER_ENDPOINT}/docker/tasks")
   check_for_errors $? "$tasks"
   if [ -n "$state" ]; then
     local filter_status
@@ -1192,14 +1242,15 @@ tasks_healthy() {
 services() {
   local services
   local filter_service
+  local filters
   filter_service="\"label\":{\"com.docker.stack.namespace=$PORTAINER_STACK_NAME\":true}"
-  services=$(http \
-    --check-status \
-    --ignore-stdin \
-    --verify=$HTTPIE_VERIFY_SSL \
-    "$PORTAINER_URL/api/endpoints/$PORTAINER_ENDPOINT/docker/services" \
-    filters=="{$filter_service}" \
-    "Authorization: Bearer $PORTAINER_AUTH_TOKEN")
+  filters="{${filter_service}}"
+  services=$(curl_wrapper \
+    --request GET \
+    --get \
+    --header "Authorization: Bearer ${PORTAINER_AUTH_TOKEN}" \
+    --data-urlencode "filters=${filters}" \
+    "${PORTAINER_URL}/api/endpoints/${PORTAINER_ENDPOINT}/docker/services")
   check_for_errors $? "$services"
 
   local filter_mode
@@ -1223,13 +1274,12 @@ containers() {
     filter_service="\"label\":{\"com.docker.swarm.service.name=$service_name\":true}"
   fi
   filters="{$filter_stack$(if [ -n "$filter_service" ]; then echo ",$filter_service"; fi),$filter_task}"
-  containers=$(http \
-    --check-status \
-    --ignore-stdin \
-    --verify=$HTTPIE_VERIFY_SSL \
-    "$PORTAINER_URL/api/endpoints/$PORTAINER_ENDPOINT/docker/containers/json" \
-    filters=="$filters" \
-    "Authorization: Bearer $PORTAINER_AUTH_TOKEN")
+  containers=$(curl_wrapper \
+    --request GET \
+    --get \
+    --header "Authorization: Bearer ${PORTAINER_AUTH_TOKEN}" \
+    --data-urlencode "filters=${filters}" \
+    "${PORTAINER_URL}/api/endpoints/${PORTAINER_ENDPOINT}/docker/containers/json")
   check_for_errors $? "$containers"
   echo "$containers"
 }
@@ -1241,11 +1291,13 @@ lint() {
   if [ -x "$(command -v docker-compose)" ]; then
     echo_verbose "Linting Docker compose/stack file..."
     docker_stack_error="error_docker_stack_is_invalid"
-    docker_stack_validation=$(docker-compose -f "$DOCKER_COMPOSE_FILE" config -q > docker_stack_validation_report 2>&1 || echo $docker_stack_error)
+    local docker_stack_validation_report
+    docker_stack_validation_report="$(unique_temp_file_path)"
+    docker_stack_validation=$(docker-compose -f "$DOCKER_COMPOSE_FILE" config -q > "$docker_stack_validation_report" 2>&1 || echo $docker_stack_error)
     if [[ $docker_stack_validation =~ $docker_stack_error$ ]]; then
       echo_error "Error: The '$DOCKER_COMPOSE_FILE' Docker compose/stack file is invalid:"
-      echo_error "$(cat docker_stack_validation_report)"
-      rm -f docker_stack_validation_report
+      echo_error "$(cat $docker_stack_validation_report)"
+      rm -f "$docker_stack_validation_report"
       exit 1
     else
       if [ "$ACTION" == "lint" ]; then

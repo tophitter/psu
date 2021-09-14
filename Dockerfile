@@ -2,7 +2,7 @@ FROM alpine:3.14
 
 RUN set -e; \
     apk add --no-cache \
-      bash ca-certificates docker-compose gettext httpie jq; \
+      bash ca-certificates curl docker-compose gettext jq; \
     rm -rf $(find / -regex '.*\.py[co]')
 
 ENV LANG="en_US.UTF-8" \

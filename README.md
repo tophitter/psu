@@ -49,12 +49,15 @@ For detailed instructions, see [How to use](#how-to-use) section.
 
 You will need these dependencies installed:
 
-- [bash](https://www.gnu.org/software/bash/)
-- [httpie](https://httpie.org/)
-- [jq](https://stedolan.github.io/jq/)
-- [timeout](https://man7.org/linux/man-pages/man1/timeout.1.html) <small>For macOS run: `brew install coreutils`</small>
+- [bash](https://www.gnu.org/software/bash/)<sup title="required">*</sup> <small>(>= 5.0.3)</small>
+- [curl](https://curl.se/)<sup title="required">*</sup> <small>(>= 7.64.0, but >= 7.76.0 is recommended)</small>
+- [jq](https://stedolan.github.io/jq/)<sup title="required">*</sup> <small>(>= 1.5.1)</small>
+- [timeout](https://man7.org/linux/man-pages/man1/timeout.1.html)<sup title="required">*</sup> <small>For macOS run: `brew install coreutils`</small>
+- [uuidgen](https://man7.org/linux/man-pages/man1/uuidgen.1.html) only for some <abbr title="Operating System">OS</abbr> <small>(Debian and Alpine work fine without it)</small>
 
-For Debian and similar apt-powered systems: `apt install bash httpie jq`
+<sup>*</sup> = required
+
+For Debian and similar apt-powered systems: `apt install bash curl jq`
 
 ### Docker image and variants
 

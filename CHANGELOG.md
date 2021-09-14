@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Breaking Change**: [HTTPie](https://httpie.io/) is replaced by [cURL](https://curl.se), for smaller Docker images, faster execution and to be more portable
+
+### Fixed
+- Running concurrently `psu` commands should work now, by creating unique temporary file names
+
 ## [1.2.0] - 2021-09-14
 ### Added
 - Add tests for `actions`, `containers` and `services` actions
@@ -151,7 +157,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Debug mode
 - Strict mode
 
-[Unreleased]: https://gitlab.com/psuapp/psu/compare/v1.2.0...1-2-stable
+[Unreleased]: https://gitlab.com/psuapp/psu/compare/v1.2.0...1-3-next
 [1.2.0]: https://gitlab.com/psuapp/psu/-/tags/v1.2.0
 [1.2.0-beta.1]: https://gitlab.com/psuapp/psu/-/tags/v1.2.0-beta.1
 [1.2.0-alpha]: https://gitlab.com/psuapp/psu/-/tags/v1.2.0-alpha
