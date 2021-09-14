@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Add tests for `actions`, `containers` and `services` actions
+- Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer [1.24.2](https://app.swaggerhub.com/apis/deviantony/Portainer/1.24.1) API
 
 ### Changed
 - Downgrade Docker Compose from [1.29.2](https://github.com/docker/compose/releases/tag/1.29.2) to [1.28.0](https://github.com/docker/compose/releases/tag/1.28.0) for Alpine image, to get faster builds 🚀
@@ -15,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Tests should run fine now with macOS
+
+### Removed
+- Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer [1.24.1](https://app.swaggerhub.com/apis/deviantony/Portainer/1.24.1) API
+- Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer [2.0.1](https://app.swaggerhub.com/apis/deviantony/Portainer/2.0.1) API
 
 ## [1.2.0-beta.1] - 2021-09-03
 ### Added
