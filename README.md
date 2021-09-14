@@ -2,7 +2,7 @@
 <div class="docsify-hidden">
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/psuapp/psu.svg)](https://hub.docker.com/r/psuapp/psu/)
-[![pipeline status](https://gitlab.com/psuapp/psu/badges/1-2-stable/pipeline.svg)](https://gitlab.com/psuapp/psu/commits/1-2-stable)
+[![pipeline status](https://gitlab.com/psuapp/psu/badges/1-3-next/pipeline.svg)](https://gitlab.com/psuapp/psu/commits/1-3-next)
 
 Bash script to deploy/update/remove stacks in a [Portainer](https://portainer.io/) instance from a [docker-compose](https://docs.docker.com/compose) [yaml file](https://docs.docker.com/compose/compose-file).
 
@@ -31,6 +31,7 @@ _Based on previous work by [@vladbabii](https://github.com/vladbabii) on [docker
 ### Standalone
 
 Just clone the repo and use the script:
+
 ```bash
 git clone https://gitlab.com/psuapp/psu.git
 cd psu/
@@ -55,7 +56,7 @@ You will need these dependencies installed:
 - [timeout](https://man7.org/linux/man-pages/man1/timeout.1.html)<sup title="required">*</sup> <small>For macOS run: `brew install coreutils`</small>
 - [uuidgen](https://man7.org/linux/man-pages/man1/uuidgen.1.html) only for some <abbr title="Operating System">OS</abbr> <small>(Debian and Alpine work fine without it)</small>
 
-<sup>*</sup> = required
+<sup>\*</sup> = required
 
 For Debian and similar apt-powered systems: `apt install bash curl jq`
 
