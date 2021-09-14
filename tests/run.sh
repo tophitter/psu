@@ -14,7 +14,7 @@ fi
 [[ "$TRACE" ]] && set -x
 
 SWARM_NODE_NAME=${SWARM_NODE_NAME:-cluster}
-SWARM_NODE_IP=${SWARM_NODE_IP:-$(getent hosts $SWARM_NODE_NAME | awk '{ print $1 }')}
+SWARM_NODE_IP=${SWARM_NODE_IP:-$(getent hosts "${SWARM_NODE_NAME}" | awk '{ print $1 }')}
 export BASE_DOMAIN="$SWARM_NODE_IP.nip.io"
 export PSU_STACK_NAME="web-app"
 PSU_URL="https://portainer.$BASE_DOMAIN"
