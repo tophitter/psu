@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0-alpha] - 2021-09-14
 ### Changed
 - **Breaking Change**: [HTTPie](https://httpie.io/) is replaced by [cURL](https://curl.se), for smaller Docker images, faster execution and to be more portable
 - Boost performance for some actions like `status`, `tasks` and `tasks:healthy`, with parallel requests
@@ -159,7 +160,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Debug mode
 - Strict mode
 
-[Unreleased]: https://gitlab.com/psuapp/psu/compare/v1.2.0...1-3-next
+[Unreleased]: https://gitlab.com/psuapp/psu/compare/v1.3.0-alpha...1-3-next
+[1.3.0-alpha]: https://gitlab.com/psuapp/psu/-/tags/v1.3.0-alpha
 [1.2.0]: https://gitlab.com/psuapp/psu/-/tags/v1.2.0
 [1.2.0-beta.1]: https://gitlab.com/psuapp/psu/-/tags/v1.2.0-beta.1
 [1.2.0-alpha]: https://gitlab.com/psuapp/psu/-/tags/v1.2.0-alpha
