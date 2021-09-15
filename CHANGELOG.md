@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Remove parallel requests improvement, because it's buggy in some situations...
+
 ## [1.3.0-alpha] - 2021-09-14
 ### Changed
 - **Breaking Change**: [HTTPie](https://httpie.io/) is replaced by [cURL](https://curl.se), for smaller Docker images, faster execution and to be more portable
