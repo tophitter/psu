@@ -55,6 +55,7 @@ You will need these dependencies installed:
 - [jq](https://stedolan.github.io/jq/)<sup title="required">*</sup> <small>(>= 1.5.1)</small>
 - [timeout](https://man7.org/linux/man-pages/man1/timeout.1.html)<sup title="required">*</sup> <small>For macOS run: `brew install coreutils`</small>
 - [uuidgen](https://man7.org/linux/man-pages/man1/uuidgen.1.html) only for some <abbr title="Operating System">OS</abbr> <small>(Debian and Alpine work fine without it)</small>
+- greadlink <small>Only for macOS run: `brew install coreutils`</small>
 
 <sup>\*</sup> = required
 

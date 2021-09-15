@@ -970,6 +970,17 @@ curl_wrapper() {
   fi
 }
 
+# Readlink command wrapper
+# useful to support macOS, run:
+# brew install coreutils
+readlink_wrapper() {
+  if [ -x "$(command -v greadlink)" ]; then
+    greadlink "$@"
+  else
+    readlink "$@"
+  fi
+}
+
 ###################################################
 ############### actions section ###################
 ###################################################
@@ -996,10 +1007,10 @@ deploy() {
   if [ "$DOCKER_COMPOSE_LINT" == "true" ]; then
     lint
   fi
+  echo_debug "DOCKER_COMPOSE_FILE -> $DOCKER_COMPOSE_FILE"
   # Read docker-compose file content
   local docker_compose_file_content
-  docker_compose_file_content="$( jq -Rscjr '{StackFileContent: . }' $DOCKER_COMPOSE_FILE | tail -c +2 | head -c -1 )"
-  echo_debug "DOCKER_COMPOSE_FILE -> $DOCKER_COMPOSE_FILE"
+  docker_compose_file_content="$(jq -Rscjr '{StackFileContent: .}' "$DOCKER_COMPOSE_FILE" | sed -e 's/^{//' -e 's/}$//')"
   echo_debug "docker_compose_file_content -> $docker_compose_file_content"
 
   local json_temp_path
@@ -1328,7 +1339,12 @@ lint() {
 #   JSON string                                   #
 ###################################################
 env_file_to_json() {
-  env -i sh -c "(unset \$(env | sed 's/=.*//'); set -a; . $(readlink -f $ENVIRONMENT_VARIABLES_FILE); set +a; jq -njc 'env | to_entries | map({name: .key, value: .value})')"
+  local jq_command
+
+  # For macOS compatibility
+  jq_command="$(which jq)"
+
+  env -i sh -c "(unset \$(env | sed 's/=.*//'); set -a; . $(readlink_wrapper -f $ENVIRONMENT_VARIABLES_FILE); set +a; \"$jq_command\" -njc 'env | to_entries | map({name: .key, value: .value})')"
 }
 
 # Set the ACTIONS variable who's a list of all psu actions

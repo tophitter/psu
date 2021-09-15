@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- macOS support
+
 ### Changed
 - Remove parallel requests improvement, because it's buggy in some situations...
 
