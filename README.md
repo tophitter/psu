@@ -30,7 +30,9 @@ _Based on previous work by [@vladbabii](https://github.com/vladbabii) on [docker
 
 ### Standalone
 
-Just clone the repo and use the script:
+> **Note**: The easiest way to install `psu` is to use [Docker method](#docker-image-and-variants), instead of this one
+
+Check the [Requirements](#requirements) section then [git] clone the repo and use the [bash] script below:
 
 ```bash
 git clone https://gitlab.com/psuapp/psu.git
@@ -50,16 +52,36 @@ For detailed instructions, see [How to use](#how-to-use) section.
 
 You will need these dependencies installed:
 
-- [bash](https://www.gnu.org/software/bash/)<sup title="required">*</sup> <small>(>= 5.0.3)</small>
-- [curl](https://curl.se/)<sup title="required">*</sup> <small>(>= 7.64.0, but >= 7.76.0 is recommended)</small>
-- [jq](https://stedolan.github.io/jq/)<sup title="required">*</sup> <small>(>= 1.5.1)</small>
-- [timeout](https://man7.org/linux/man-pages/man1/timeout.1.html)<sup title="required">*</sup> <small>For macOS run: `brew install coreutils`</small>
-- [uuidgen](https://man7.org/linux/man-pages/man1/uuidgen.1.html) only for some <abbr title="Operating System">OS</abbr> <small>(Debian and Alpine work fine without it)</small>
-- greadlink <small>Only for macOS run: `brew install coreutils`</small>
+##### For [Linux] based systems <small>([Alpine], [Debian], [Ubuntu]...)</small>
+- [bash]<sup title="required">\*</sup> <small>(>= 4.4.23)</small>
+- [curl]<sup title="required">\*</sup> <small>(>= 7.64.0, but >= 7.76.0 is recommended)</small>
+- [jq]<sup title="required">\*</sup> <small>(>= 1.5.1)</small>
+- [uuidgen] recommended only for some <abbr title="Operating System">OS</abbr> <small>(Alpine and Debian work fine without it)</small>
+
+For [Debian] and similar apt-powered [Linux] systems, run: `apt install bash curl jq`
+
+##### For [macOS]
+- [bash]<sup title="required">\*</sup> <small>(>= 4.4.23)</small>
+- [curl]<sup title="required">\*</sup> <small>(>= 7.64.0, but >= 7.76.0 is recommended)</small>
+- [jq]<sup title="required">\*</sup> <small>(>= 1.5.1)</small>
+- [timeout]<sup title="required">\*</sup> <small>(included in the [coreutils] package)</small>
+- greadlink <small>(included in the [coreutils] package)</small>
+
+You should install [Homebrew], then run: `brew install bash coreutils jq`
+
+##### For [Windows]
+- [bash]<sup title="required">\*</sup> <small>(>= 4.4.23)</small>
+- [curl]<sup title="required">\*</sup> <small>(>= 7.64.0, but >= 7.76.0 is recommended)</small>
+- [jq]<sup title="required">\*</sup> <small>(>= 1.5.1)</small>
+
+> **Note**: `psu`should work with [Windows], but it could be unstable ⚠️
+
+You should download and install [Git](https://git-scm.com/download/win) and [jq](https://stedolan.github.io/jq/download) for [Windows]
+
+##### For all systems
+- [docker-compose] is recommended but not required <small>(useful for linting docker compose/stack files)</small>
 
 <sup>\*</sup> = required
-
-For Debian and similar apt-powered systems: `apt install bash curl jq`
 
 ### Docker image and variants
 
@@ -246,3 +268,19 @@ For detailed instructions, see the [CLI Commands](docs/README.md) documentation.
 Source code contained by this project is licensed under the [GNU General Public License version 3](https://www.gnu.org/licenses/gpl-3.0.en.html).
 
 See [LICENSE](LICENSE) file for reference.
+
+[Linux]: https://kernel.org
+[Alpine]: https://alpinelinux.org
+[Debian]: https://debian.org
+[Ubuntu]: https://ubuntu.com/
+[macOS]: https://apple.com/macos
+[Homebrew]: https://brew.sh
+[coreutils]: https://formulae.brew.sh/formula/coreutils
+[Windows]: https://microsoft.com/windows
+[bash]: https://www.gnu.org/software/bash
+[curl]: https://curl.se
+[jq]: https://stedolan.github.io/jq
+[timeout]: https://man7.org/linux/man-pages/man1/timeout.1.html
+[uuidgen]: https://man7.org/linux/man-pages/man1/uuidgen.1.html
+[docker-compose]: https://docs.docker.com/compose/install
+[git]: https://git-scm.com/

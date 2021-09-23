@@ -170,7 +170,7 @@ main() {
         echo "$services"
       else
         # Only display service(s) name in quiet mode
-        echo "$services" | jq -r '.[] | [.Spec.Name] | add'
+        echo "$services" | jq -r '.[] | [.Spec.Name] | add' | tr -d '\r'
       fi
       exit 0
     fi
@@ -229,7 +229,7 @@ main() {
         echo "$tasks"
       else
         # Only display task(s) id in quiet mode
-        echo "$tasks" | jq -r '.[] | [.ID] | add'
+        echo "$tasks" | jq -r '.[] | [.ID] | add' | tr -d '\r'
       fi
       exit 0
     fi
@@ -248,7 +248,7 @@ main() {
         echo "$containers"
       else
         # Only display container(s) id in quiet mode
-        echo "$containers" | jq -r '.[] | [.Id] | add'
+        echo "$containers" | jq -r '.[] | [.Id] | add' | tr -d '\r'
       fi
       exit 0
     fi
@@ -277,7 +277,7 @@ main() {
       echo "$STACKS"
     else
       # Only display stack names in quiet mode
-      echo "$STACKS" | jq -r '.[] | [.Name] | add'
+      echo "$STACKS" | jq -r '.[] | [.Name] | add' | tr -d '\r'
     fi
     exit 0
   fi
@@ -912,7 +912,7 @@ unique_temp_file_path() {
   if [ -w "$temp_path" ]; then
     local file_uuid
     # Generate universally unique identifier (UUID)
-    file_uuid=$(if [ -x "$(command -v uuidgen)" ]; then uuidgen; else cat /proc/sys/kernel/random/uuid; fi)
+    file_uuid=$(if [ -x "$(command -v uuidgen)" ]; then uuidgen; else cat /proc/sys/kernel/random/uuid 2> /dev/null || od -vAn -N4 -t u4 < /dev/urandom | tr -d ' '; fi)
     if [ -z "$file_uuid" ]; then
       echo_error "You must install the 'uuidgen' program, to generate universally unique identifier"
       exit 1
@@ -1340,11 +1340,13 @@ lint() {
 ###################################################
 env_file_to_json() {
   local jq_command
+  local sh_command
 
-  # For macOS compatibility
-  jq_command="$(which jq)"
+  # For macOS and Windows compatibility
+  jq_command="$(command -v jq)"
+  sh_command="$(command -v sh)"
 
-  env -i sh -c "(unset \$(env | sed 's/=.*//'); set -a; . $(readlink_wrapper -f $ENVIRONMENT_VARIABLES_FILE); set +a; \"$jq_command\" -njc 'env | to_entries | map({name: .key, value: .value})')"
+  env -i "$sh_command" -c "(unset \$(env | sed 's/=.*//'); set -a; . $(readlink_wrapper -f $ENVIRONMENT_VARIABLES_FILE); set +a; \"$jq_command\" -njc 'env | to_entries | map({name: .key, value: .value})')"
 }
 
 # Set the ACTIONS variable who's a list of all psu actions

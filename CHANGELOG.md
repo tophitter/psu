@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- macOS support
+- [macOS](https://apple.com/macos) support
+- [Windows](https://microsoft.com/windows) support, but it could be unstable ⚠️
 
 ### Changed
 - Remove parallel requests improvement, because it's buggy in some situations...
