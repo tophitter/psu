@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Windows](https://microsoft.com/windows) support, but it could be unstable ⚠️
 - Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer <abbr title="Community Edition">CE</abbr> [2.9.3](https://app.swaggerhub.com/apis/portainer/portainer-ce/2.9.2) API
 
+### Changed
+- Upgrade Operating System of Docker based images, with [Alpine 3.15](https://hub.docker.com/_/alpine)
+
 ### Fixed
 - Fix documentation scrolling between pages, with the [`auto2top`](https://docsify.js.org/#/configuration?id=auto2top) option of [docsify](https://docsify.js.org)
 
