@@ -9,12 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - [macOS](https://apple.com/macos) support
 - [Windows](https://microsoft.com/windows) support, but it could be unstable ⚠️
+- Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer <abbr title="Community Edition">CE</abbr> [2.9.3](https://app.swaggerhub.com/apis/portainer/portainer-ce/2.9.2) API
 
 ### Fixed
 - Fix documentation scrolling between pages, with the [`auto2top`](https://docsify.js.org/#/configuration?id=auto2top) option of [docsify](https://docsify.js.org)
 
 ### Removed
 - Remove parallel requests improvement, because it's buggy in some situations...
+- Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer [2.1.1](https://app.swaggerhub.com/apis/deviantony/Portainer/2.0.1) API
 
 ## [1.3.0-alpha] - 2021-09-14
 ### Changed
@@ -44,8 +46,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.0-beta.1] - 2021-09-03
 ### Added
-- Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer <abbr title="Community Edition">CE</abbr> [2.5.1](https://app.swaggerhub.com/apis/deviantony/Portainer/2.0.1) API
-- Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer <abbr title="Community Edition">CE</abbr> [2.6.3](https://app.swaggerhub.com/apis/deviantony/Portainer/2.0.1) API
+- Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer <abbr title="Community Edition">CE</abbr> [2.5.1](https://app.swaggerhub.com/apis/portainer/portainer-ce/2.5.1) API
+- Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer <abbr title="Community Edition">CE</abbr> [2.6.3](https://app.swaggerhub.com/apis/portainer/portainer-ce/2.6.3) API
 
 ### Changed
 - Use Docker [Compose 1.29.2](https://github.com/docker/compose/releases/tag/1.29.2) instead of Docker [Compose 1.28.3](https://github.com/docker/compose/releases/tag/1.28.3)
