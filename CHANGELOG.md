@@ -10,7 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [macOS](https://apple.com/macos) support
 - [Windows](https://microsoft.com/windows) support, but it could be unstable ⚠️
 
-### Changed
+### Fixed
+- Fix documentation scrolling between pages, with the [`auto2top`](https://docsify.js.org/#/configuration?id=auto2top) option of [docsify](https://docsify.js.org)
+
+### Removed
 - Remove parallel requests improvement, because it's buggy in some situations...
 
 ## [1.3.0-alpha] - 2021-09-14
