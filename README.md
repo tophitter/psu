@@ -52,7 +52,7 @@ For detailed instructions, see [How to use](#how-to-use) section.
 
 You will need these dependencies installed:
 
-##### For [Linux] based systems <small>([Alpine], [Debian], [Ubuntu]...)</small>
+##### [Linux] based systems <small>([Alpine], [Debian], [Ubuntu]...)</small>
 - [bash]<sup title="required">\*</sup> <small>(>= 4.4.23)</small>
 - [curl]<sup title="required">\*</sup> <small>(>= 7.64.0, but >= 7.76.0 is recommended)</small>
 - [jq]<sup title="required">\*</sup> <small>(>= 1.5.1)</small>
@@ -60,7 +60,7 @@ You will need these dependencies installed:
 
 For [Debian] and similar apt-powered [Linux] systems, run: `apt install bash curl jq`
 
-##### For [macOS]
+##### [macOS]
 - [bash]<sup title="required">\*</sup> <small>(>= 4.4.23)</small>
 - [curl]<sup title="required">\*</sup> <small>(>= 7.64.0, but >= 7.76.0 is recommended)</small>
 - [jq]<sup title="required">\*</sup> <small>(>= 1.5.1)</small>
@@ -69,7 +69,7 @@ For [Debian] and similar apt-powered [Linux] systems, run: `apt install bash cur
 
 You should install [Homebrew], then run: `brew install bash coreutils jq`
 
-##### For [Windows]
+##### [Windows]
 - [bash]<sup title="required">\*</sup> <small>(>= 4.4.23)</small>
 - [curl]<sup title="required">\*</sup> <small>(>= 7.64.0, but >= 7.76.0 is recommended)</small>
 - [jq]<sup title="required">\*</sup> <small>(>= 1.5.1)</small>
