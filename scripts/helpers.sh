@@ -20,7 +20,7 @@ function external_registry_login() {
 
 function setup_docker() {
   if ! docker info &>/dev/null; then
-    if [ -z "$DOCKER_HOST" -a "$KUBERNETES_PORT" ]; then
+    if [ -z "$DOCKER_HOST" ] && [ -n "$KUBERNETES_PORT" ]; then
       export DOCKER_HOST='tcp://localhost:2375'
     fi
   fi
