@@ -1,18 +1,17 @@
-FROM debian:11-slim
+FROM --platform=$BUILDPLATFORM debian:11-slim
 
-ARG DOCKER_COMPOSE_VERSION=1.29.2
+ARG DOCKER_COMPOSE_VERSION="v2.1.1"
 
 RUN set -e; \
     apt-get update -yqq; \
     apt-get install \
       ca-certificates curl gettext-base jq -yqq; \
     \
-    curl --fail --silent --location "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose; \
+    curl --fail --location --silent "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" --output /usr/local/bin/docker-compose; \
     chmod +x /usr/local/bin/docker-compose; \
     \
     apt-get clean; \
-    rm -rf /var/lib/apt/lists/*; \
-    rm -rf $(find / -regex '.*\.py[co]')
+    rm -rf /var/lib/apt/lists/*
 
 ENV LANG="en_US.UTF-8" \
     LC_ALL="C.UTF-8" \

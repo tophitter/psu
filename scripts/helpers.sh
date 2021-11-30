@@ -26,6 +26,24 @@ function setup_docker() {
   fi
 }
 
+function setup_docker_multi_arch() {
+  mkdir -p ~/.docker/cli-plugins/
+  current_system="$(uname -s | tr '[:upper:]' '[:lower:]')"
+  current_arch="$(uname -m)"
+  case $current_arch in
+    armv6*) current_arch="arm-v6";;
+    armv7*) current_arch="arm-v7";;
+    aarch64) current_arch="arm64";;
+    x86_64) current_arch="amd64";;
+  esac
+  curl --fail --location --silent "https://github.com/docker/buildx/releases/download/${BUILDX_VERSION}/buildx-${BUILDX_VERSION}.${current_system}-${current_arch}" --output ~/.docker/cli-plugins/docker-buildx
+  chmod a+x ~/.docker/cli-plugins/docker-buildx
+  docker context create multiarch
+  docker run --privileged --rm tonistiigi/binfmt --install all
+  docker buildx create --name multibuilder --use --platform $DOCKER_MULTI_ARCH multiarch
+  docker buildx inspect --bootstrap
+}
+
 function git_tag_on_success() {
   local git_tag="${1:-dev}"
   local target_branch="${2:-master}"
@@ -61,13 +79,10 @@ function registry_tag_on_success() {
   local target_external_registry_image="${6:-$DOCKER_REGISTRY_IMAGE}"
 
   if [ "$CI_COMMIT_REF_NAME" == "$target_branch" ]; then
-    docker pull "$current_registry_image:$current_registry_tag"
-    docker tag "$current_registry_image:$current_registry_tag" "$target_registry_image:$target_registry_tag"
-    docker push "$target_registry_image:$target_registry_tag"
-    if [ -n "$target_external_registry_image" ]; then
-      docker tag "$current_registry_image:$current_registry_tag" "$target_external_registry_image:$target_registry_tag"
-      docker push "$target_external_registry_image:$target_registry_tag"
-    fi
+    echo -e "FROM --platform=\$BUILDPLATFORM $current_registry_image:$current_registry_tag
+    " > Dockerfile.tmp
+    docker buildx build --compress --push --platform $DOCKER_MULTI_ARCH --tag "$target_registry_image:$target_registry_tag" $(if [ -n "$DOCKER_REGISTRY" ] && [ -n "$target_external_registry_image" ]; then echo "--tag $target_external_registry_image:$target_registry_tag"; fi) --file Dockerfile.tmp .
+    rm -f Dockerfile.tmp
   fi
 }
 

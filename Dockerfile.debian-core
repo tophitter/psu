@@ -1,4 +1,4 @@
-FROM debian:11-slim
+FROM --platform=$BUILDPLATFORM debian:11-slim
 
 RUN set -e; \
     apt-get update -yqq; \

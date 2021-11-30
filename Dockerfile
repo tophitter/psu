@@ -1,9 +1,13 @@
-FROM alpine:3.15
+FROM --platform=$BUILDPLATFORM alpine:3.15
+
+ARG DOCKER_COMPOSE_VERSION="v2.1.1"
 
 RUN set -e; \
     apk add --no-cache \
-      bash ca-certificates curl docker-compose gettext jq; \
-    rm -rf $(find / -regex '.*\.py[co]')
+      bash ca-certificates curl gettext jq; \
+    \
+    curl --fail --location --silent "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" --output /usr/local/bin/docker-compose; \
+    chmod +x /usr/local/bin/docker-compose
 
 ENV LANG="en_US.UTF-8" \
     LC_ALL="C.UTF-8" \
