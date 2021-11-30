@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0-beta.1] - 2021-11-30
 ### Added
 - Docker images are now multi-architecture (`linux/amd64` and `linux/arm64` 🦾)
 - [macOS](https://apple.com/macos) support
@@ -179,7 +180,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Debug mode
 - Strict mode
 
-[Unreleased]: https://gitlab.com/psuapp/psu/compare/v1.3.0-alpha...1-3-next
+[Unreleased]: https://gitlab.com/psuapp/psu/compare/v1.3.0-beta.1...1-3-next
+[1.3.0-beta.1]: https://gitlab.com/psuapp/psu/-/tags/v1.3.0-beta.1
 [1.3.0-alpha]: https://gitlab.com/psuapp/psu/-/tags/v1.3.0-alpha
 [1.2.0]: https://gitlab.com/psuapp/psu/-/tags/v1.2.0
 [1.2.0-beta.1]: https://gitlab.com/psuapp/psu/-/tags/v1.2.0-beta.1
