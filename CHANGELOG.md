@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade Operating System of Docker based images, with [Alpine 3.15](https://hub.docker.com/_/alpine)
 - Use Docker [Compose 2.1.1](https://github.com/docker/compose/releases/tag/v2.1.1) instead of Docker [Compose 1.x](https://github.com/docker/compose/releases/tag/1.28.0)
 - Reduce Docker images size, based on Alpine and Debian, again
+- Replace `master` by `main` git branch name in scripts. Reference: [New git default branch name](https://about.gitlab.com/blog/2021/03/10/new-git-default-branch-name/)
 
 ### Fixed
 - Fix documentation scrolling between pages, with the [`auto2top`](https://docsify.js.org/#/configuration?id=auto2top) option of [docsify](https://docsify.js.org)

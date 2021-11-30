@@ -41,19 +41,19 @@ if (
   # see: https://semver.org
   if [[ "$target_registry_tag" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     git fetch --all
-    # e.g. "  origin/master"
-    master_branch="$(git branch --no-color --remotes --list 'origin/master')"
+    # e.g. "  origin/main"
+    main_branch="$(git branch --no-color --remotes --list "origin/${CI_MAIN_BRANCH:-main}")"
 
     # e.g. "  origin/1-0-stable
     # >  origin/1-1-stable
     # >  origin/2-0-stable
-    # >  origin/master"
-    commit_in_branches="$(git branch --no-color --remotes --contains $CI_COMMIT_SHA | grep -w '  origin/master\|  origin/.*-stable')"
+    # >  origin/main"
+    commit_in_branches="$(git branch --no-color --remotes --contains $CI_COMMIT_SHA | grep -w "  origin/${CI_MAIN_BRANCH:-main}\|  origin/.*-stable")"
 
     # e.g. "  origin/2-0-stable
     # >  origin/1-1-stable
     # >  origin/1-0-stable"
-    stable_branches="$(echo "$commit_in_branches" | grep -vw '  origin/master' | sort -rV)"
+    stable_branches="$(echo "$commit_in_branches" | grep -vw "  origin/${CI_MAIN_BRANCH:-main}" | sort -rV)"
 
     # Extract the MAJOR and MAJOR.MINOR versions
     # Then tag and push them to Docker registry.
@@ -71,7 +71,7 @@ if (
     # e.g. "1-1-stable"
     latest_major_branch="$(echo "$stable_branches"| grep -E "^  origin/$major_registry_tag-[0-9]+-stable$" | head -n 1 | sed -E 's/^  origin\/(.+)$/\1/')"
 
-    # If the git tag is only contained in master branch
+    # If the git tag is only contained in the "main" branch
     # or if it's contained in the latest stable branch who has the same MAJOR version
     # e.g. when there is 2 stable branches "1-0-stable" and "1-1-stable".
     # If git tag is "v1.0.1", the MAJOR registry tag "1" is NOT written.
@@ -80,7 +80,7 @@ if (
     # If git tag is "v1.1.3", the MAJOR registry tag "1" is written.
     # Because the lastet stable branch is "1-1-stable".
     if (
-      ([ -n "$master_branch" ] && [ "$master_branch" == "$commit_in_branches" ]) ||
+      ([ -n "$main_branch" ] && [ "$main_branch" == "$commit_in_branches" ]) ||
       [ "$latest_major_branch" == "$target_stable_branch" ]
     ); then
       registry_tag_on_success $CI_COMMIT_SHA $major_registry_tag $CI_COMMIT_REF_NAME
@@ -89,7 +89,7 @@ if (
     registry_tag_on_success $CI_COMMIT_SHA $major_minor_registry_tag $CI_COMMIT_REF_NAME
     for variant in $variants; do
       if (
-        ([ -n "$master_branch" ] && [ "$master_branch" == "$commit_in_branches" ]) ||
+        ([ -n "$main_branch" ] && [ "$main_branch" == "$commit_in_branches" ]) ||
         [ "$latest_major_branch" == "$target_stable_branch" ]
       ); then
         registry_tag_on_success "${variant}-${CI_COMMIT_SHA}" "${major_registry_tag}-${variant}" $CI_COMMIT_REF_NAME
@@ -98,12 +98,12 @@ if (
       registry_tag_on_success "${variant}-${CI_COMMIT_SHA}" "${major_minor_registry_tag}-${variant}" $CI_COMMIT_REF_NAME
     done
 
-    # The latest stable semantic versioning git tag on the "master" branch
+    # The latest stable semantic versioning git tag on the "main" branch
     # is considered as the "latest" registry tag.
-    # Check if the current git commit is only present in the "master" branch
+    # Check if the current git commit is only present in the "main" branch
     # and not in stable branches (e.g. "1-0-stable").
     # Non stable branches are skipped (e.g. "feature-better-performance").
-    if [ -n "$master_branch" ] && [ "$master_branch" == "$commit_in_branches" ]; then
+    if [ -n "$main_branch" ] && [ "$main_branch" == "$commit_in_branches" ]; then
       registry_tag_on_success $CI_COMMIT_SHA "latest" $CI_COMMIT_REF_NAME
       for variant in $variants; do
         registry_tag_on_success "${variant}-${CI_COMMIT_SHA}" "${variant}" $CI_COMMIT_REF_NAME

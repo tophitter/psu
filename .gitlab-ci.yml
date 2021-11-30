@@ -150,7 +150,7 @@ generate-docs:
     - bash scripts/push-to-gitlab-pages.sh
   only:
     variables:
-      - $CI_COMMIT_REF_NAME == "master" || $CI_COMMIT_REF_NAME =~ /^.+-stable$/ && $CI_COMMIT_REF_PROTECTED == "true"
+      - (($CI_MAIN_BRANCH && $CI_COMMIT_REF_NAME == $CI_MAIN_BRANCH) || $CI_COMMIT_REF_NAME == "main" || $CI_COMMIT_REF_NAME =~ /^.+-stable$/) && $CI_COMMIT_REF_PROTECTED == "true"
   except:
     variables:
       - $CI_PIPELINE_SOURCE == "schedule"

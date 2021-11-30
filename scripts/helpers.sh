@@ -46,7 +46,7 @@ function setup_docker_multi_arch() {
 
 function git_tag_on_success() {
   local git_tag="${1:-dev}"
-  local target_branch="${2:-master}"
+  local target_branch="${2:-${CI_MAIN_BRANCH:-main}}"
 
   if (
     [ "$CI_COMMIT_REF_NAME" == "$target_branch" ] &&
@@ -73,7 +73,7 @@ function git_tag_on_success() {
 function registry_tag_on_success() {
   local current_registry_tag="${1:-$CI_COMMIT_SHA}"
   local target_registry_tag="${2:-dev}"
-  local target_branch="${3:-master}"
+  local target_branch="${3:-${CI_MAIN_BRANCH:-main}}"
   local current_registry_image="${4:-$CI_REGISTRY_IMAGE/builds}"
   local target_registry_image="${5:-$CI_REGISTRY_IMAGE}"
   local target_external_registry_image="${6:-$DOCKER_REGISTRY_IMAGE}"
@@ -134,7 +134,7 @@ function get_git_last_stable_tag() {
 
 # Useful for updating Docker images, on release/stable branches, but not the psu code
 # See: https://docs.gitlab.com/ce/workflow/gitlab_flow.html#release-branches-with-gitlab-flow
-# You can create a scheduled pipeline with a targeted git branch ("master", "1-0-stable", ...)
+# You can create a scheduled pipeline with a targeted git branch ("main", "1-0-stable", ...)
 # and the CI variables below:
 #   "GIT_RESET_LAST_STABLE_TAG=true"
 #   "DOCKER_CACHE_DISABLED=true"
