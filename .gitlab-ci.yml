@@ -12,7 +12,7 @@ variables:
   PSU_TAG_CORE: core-$$CI_COMMIT_SHA
   DOCKER_REGISTRY_IMAGE: $DOCKER_REGISTRY/$CI_PROJECT_PATH
   BUILDX_VERSION: "v0.7.1"
-  DOCKER_MULTI_ARCH: "linux/amd64,linux/arm64"
+  DOCKER_MULTI_ARCH: "linux/amd64,linux/arm64,linux/arm/v7"
 
 stages:
   - cleanup

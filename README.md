@@ -14,7 +14,7 @@ _Based on previous work by [@vladbabii](https://github.com/vladbabii) on [docker
 
 - [How to install](#how-to-install)   
    - [Standalone](#standalone)   
-   - [Docker image and variants](#docker-image-and-variants)   
+   - [Docker image, variants and multi-architecture](#docker-image-variants-and-multi-architecture)   
 - [How to use](#how-to-use)   
    - [With options](#with-options)   
    - [With flags](#with-flags)   
@@ -83,7 +83,7 @@ You should download and install [Git](https://git-scm.com/download/win) and [jq]
 
 <sup>\*</sup> = required
 
-### Docker image and variants
+### Docker image, variants and multi-architecture
 
 If you don't want or can't install `psu` and its dependencies, you can run it with the default [published Docker image](https://hub.docker.com/r/psuapp/psu), like this:
 ```bash
@@ -138,6 +138,26 @@ The `debian` and `debian-core` variants use [Debian](https://www.debian.org) ins
 - `1.1-debian-core`, `1.1.0-debian-core` -> [`v1.1.0`](https://gitlab.com/psuapp/psu/-/tags/v1.1.0)
 - `1.0-debian`, `1.0.7-debian` -> [`v1.0.7`](https://gitlab.com/psuapp/psu/-/tags/v1.0.7)
 - `1.0-debian-core`, `1.0.7-debian-core` -> [`v1.0.7`](https://gitlab.com/psuapp/psu/-/tags/v1.0.7)
+
+##### Multi-Architecture
+
+The Docker images support multi-architecture: `linux/amd64`, `linux/arm64` and `linux/arm/v7`.
+
+On ARM machines, if you get this error when running a `psu` Docker image:
+```
+standard_init_linux.go:228: exec user process caused: exec format error
+```
+
+You need to install `linux/amd64` QEMU binary, like this:
+```bash
+docker run --privileged --rm tonistiigi/binfmt --install linux/amd64
+```
+Then run your `psu` Docker image again and it should work 🤞
+
+And if you want to uninstall this QEMU binary, run this command:
+```bash
+docker run --privileged --rm tonistiigi/binfmt --uninstall linux/amd64
+```
 
 #### Testing/debugging:
 
