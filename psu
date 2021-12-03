@@ -948,7 +948,7 @@ curl_wrapper() {
     $curl_fail_params \
     --header "Content-Type: application/json" \
     --silent \
-    $(if [ "$HTTPIE_VERIFY_SSL" == "no" ]; then echo --insecure; else $(if [ -f "$HTTPIE_VERIFY_SSL" ]; then echo --cacert "$HTTPIE_VERIFY_SSL"; else echo ''; fi); fi) \
+    $(if [ "$HTTPIE_VERIFY_SSL" == "no" ]; then echo --insecure; elif [ -f "$HTTPIE_VERIFY_SSL" ]; then echo --cacert "$HTTPIE_VERIFY_SSL"; else echo ''; fi) \
     "$@")"
 
   result_exit_code="$?"

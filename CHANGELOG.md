@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add `linux/arm/v7` architecture to support Raspberry Pi
 
+### Fixed
+- `psu` was unusable when using a custom <abbr title="Certificate Authority">CA</abbr>, with the `HTTPIE_VERIFY_SSL` env
+
 ## [1.3.0-beta.1] - 2021-11-30
 ### Added
 - Docker images are now multi-architecture (`linux/amd64` and `linux/arm64` 🦾)
