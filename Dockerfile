@@ -1,6 +1,6 @@
 FROM --platform=$BUILDPLATFORM alpine:3.15
 
-ARG DOCKER_COMPOSE_VERSION="v2.1.1"
+ARG DOCKER_COMPOSE_VERSION="v2.2.2"
 
 RUN set -e; \
     apk add --no-cache \

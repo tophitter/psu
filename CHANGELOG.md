@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add `linux/arm/v7` architecture to support Raspberry Pi
 
+### Changed
+- Use Docker [Compose 2.2.2](https://github.com/docker/compose/releases/tag/v2.2.2) instead of Docker [Compose 2.1.1](https://github.com/docker/compose/releases/tag/v2.1.1)
+
 ### Fixed
 - `psu` was unusable when using a custom <abbr title="Certificate Authority">CA</abbr>, with the `HTTPIE_VERIFY_SSL` env
 
