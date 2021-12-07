@@ -2,7 +2,7 @@
 <div class="docsify-hidden">
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/psuapp/psu.svg)](https://hub.docker.com/r/psuapp/psu/)
-[![pipeline status](https://gitlab.com/psuapp/psu/badges/1-3-next/pipeline.svg)](https://gitlab.com/psuapp/psu/commits/1-3-next)
+[![pipeline status](https://gitlab.com/psuapp/psu/badges/1-3-stable/pipeline.svg)](https://gitlab.com/psuapp/psu/commits/1-3-stable)
 
 Bash script to deploy/update/remove stacks in a [Portainer](https://portainer.io/) instance from a [docker-compose](https://docs.docker.com/compose) [yaml file](https://docs.docker.com/compose/compose-file).
 
@@ -87,7 +87,7 @@ You should download and install [Git](https://git-scm.com/download/win) and [jq]
 
 If you don't want or can't install `psu` and its dependencies, you can run it with the default [published Docker image](https://hub.docker.com/r/psuapp/psu), like this:
 ```bash
-docker run psuapp/psu:1.2 deploy ...
+docker run psuapp/psu:1.3 deploy ...
 ```
 > **Note**: Docker images are also available on [GitLab](https://gitlab.com/psuapp/psu/container_registry).
 
@@ -99,9 +99,10 @@ Published Docker images are [tagged](https://hub.docker.com/r/psuapp/psu/tags) m
 
 <!-- - `dev` -> [`dev`](https://gitlab.com/psuapp/psu/-/tags/dev) -->
 
+- `1`, `1.3`, `1.3.0` -> [`v1.3.0`](https://gitlab.com/psuapp/psu/-/tags/v1.3.0)
 - `1.3.0-beta.1` -> [`v1.3.0-beta.1`](https://gitlab.com/psuapp/psu/-/tags/v1.3.0-beta.1)
 - `1.3.0-alpha` -> [`v1.3.0-alpha`](https://gitlab.com/psuapp/psu/-/tags/v1.3.0-alpha)
-- `1`, `1.2`, `1.2.0` -> [`v1.2.0`](https://gitlab.com/psuapp/psu/-/tags/v1.2.0)
+- `1.2`, `1.2.0` -> [`v1.2.0`](https://gitlab.com/psuapp/psu/-/tags/v1.2.0)
 - `1.2.0-beta.1` -> [`v1.2.0-beta.1`](https://gitlab.com/psuapp/psu/-/tags/v1.2.0-beta.1)
 - `1.2.0-alpha` -> [`v1.2.0-alpha`](https://gitlab.com/psuapp/psu/-/tags/v1.2.0-alpha)
 - `1.1`, `1.1.0` -> [`v1.1.0`](https://gitlab.com/psuapp/psu/-/tags/v1.1.0)
@@ -124,7 +125,8 @@ The `core` variant doesn't include `docker-compose`, so it's a bit smaller.
 But you can't lint Docker compose/stack file before deploying a stack.
 <!-- - `dev-core` -> [`dev`](https://gitlab.com/psuapp/psu/-/tags/dev) -->
 
-- `1-core`, `1.2-core`, `1.2.0-core` -> [`v1.2.0`](https://gitlab.com/psuapp/psu/-/tags/v1.2.0)
+- `1-core`, `1.3-core`, `1.3.0-core` -> [`v1.3.0`](https://gitlab.com/psuapp/psu/-/tags/v1.3.0)
+- `1.2-core`, `1.2.0-core` -> [`v1.2.0`](https://gitlab.com/psuapp/psu/-/tags/v1.2.0)
 - `1.1-core`, `1.1.0-core` -> [`v1.1.0`](https://gitlab.com/psuapp/psu/-/tags/v1.1.0)
 - `1.0-core`, `1.0.7-core` -> [`v1.0.7`](https://gitlab.com/psuapp/psu/-/tags/v1.0.7)
 
@@ -132,8 +134,10 @@ The `debian` and `debian-core` variants use [Debian](https://www.debian.org) ins
 <!-- - `dev-debian` -> [`dev`](https://gitlab.com/psuapp/psu/-/tags/dev)
 - `dev-debian-core` -> [`dev`](https://gitlab.com/psuapp/psu/-/tags/dev) -->
 
-- `1-debian`, `1.2-debian`, `1.2.0-debian` -> [`v1.2.0`](https://gitlab.com/psuapp/psu/-/tags/v1.2.0)
-- `1-debian-core`, `1.2-debian-core`, `1.2.0-debian-core` -> [`v1.2.0`](https://gitlab.com/psuapp/psu/-/tags/v1.2.0)
+- `1-debian`, `1.3-debian`, `1.3.0-debian` -> [`v1.3.0`](https://gitlab.com/psuapp/psu/-/tags/v1.3.0)
+- `1-debian-core`, `1.3-debian-core`, `1.3.0-debian-core` -> [`v1.3.0`](https://gitlab.com/psuapp/psu/-/tags/v1.3.0)
+- `1.2-debian`, `1.2.0-debian` -> [`v1.2.0`](https://gitlab.com/psuapp/psu/-/tags/v1.2.0)
+- `1.2-debian-core`, `1.2.0-debian-core` -> [`v1.2.0`](https://gitlab.com/psuapp/psu/-/tags/v1.2.0)
 - `1.1-debian`, `1.1.0-debian` -> [`v1.1.0`](https://gitlab.com/psuapp/psu/-/tags/v1.1.0)
 - `1.1-debian-core`, `1.1.0-debian-core` -> [`v1.1.0`](https://gitlab.com/psuapp/psu/-/tags/v1.1.0)
 - `1.0-debian`, `1.0.7-debian` -> [`v1.0.7`](https://gitlab.com/psuapp/psu/-/tags/v1.0.7)
@@ -163,10 +167,10 @@ docker run --privileged --rm tonistiigi/binfmt --uninstall linux/amd64
 
 For testing/debugging, you can use this Docker image in interactive mode, to run any commands inside the container:
 ```bash
-docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -it --rm --entrypoint bash psuapp/psu:1.2
+docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -it --rm --entrypoint bash psuapp/psu:1.3
 # Run any commands here! E.g.
 $ psu --version
-Portainer Stack Utils, version 1.3.0-beta.1
+Portainer Stack Utils, version 1.3.0
   License GPLv3: GNU GPL version 3
 ```
 
@@ -199,7 +203,7 @@ psu rm --user admin --password password --url https://portainer.local --name mys
 
 **With Docker:**
 ```bash
-docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -v $(pwd)/.env:/.env psuapp/psu:1.2 deploy --user admin --password password --url https://portainer.local --name mystack --compose-file docker-compose.yml --env-file .env
+docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -v $(pwd)/.env:/.env psuapp/psu:1.3 deploy --user admin --password password --url https://portainer.local --name mystack --compose-file docker-compose.yml --env-file .env
 ```
 
 ### With flags
@@ -227,7 +231,7 @@ psu rm -u admin -p password -l https://portainer.local -n mystack
 
 **With Docker:**
 ```bash
-docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -v $(pwd)/.env:/.env psuapp/psu:1.2 deploy -u admin -p password -l https://portainer.local -n mystack -c docker-compose.yml -g .env
+docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -v $(pwd)/.env:/.env psuapp/psu:1.3 deploy -u admin -p password -l https://portainer.local -n mystack -c docker-compose.yml -g .env
 ```
 
 ### With envvars
@@ -269,13 +273,13 @@ psu
 
 **With Docker:**
 ```bash
-docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -v $(pwd)/.env:/.env -e ACTION="deploy" -e PORTAINER_USER="admin" -e PORTAINER_PASSWORD="password" -e PORTAINER_URL="https://portainer.local" -e PORTAINER_STACK_NAME="mystack" -e DOCKER_COMPOSE_FILE="docker-compose.yml" -e ENVIRONMENT_VARIABLES_FILE=".env" psuapp/psu:1.2
+docker run -v $(pwd)/docker-compose.yml:/docker-compose.yml -v $(pwd)/.env:/.env -e ACTION="deploy" -e PORTAINER_USER="admin" -e PORTAINER_PASSWORD="password" -e PORTAINER_URL="https://portainer.local" -e PORTAINER_STACK_NAME="mystack" -e DOCKER_COMPOSE_FILE="docker-compose.yml" -e ENVIRONMENT_VARIABLES_FILE=".env" psuapp/psu:1.3
 ```
 
 ## Documentation
 
 <div class="docsify-hidden">
-For advanced usage, see the full <a href="https://psuapp.gitlab.io/psu/1-2-stable"><abbr title="Portainer Stack Utils">PSU</abbr> documentation</a>.
+For advanced usage, see the full <a href="https://psuapp.gitlab.io/psu/1-3-stable"><abbr title="Portainer Stack Utils">PSU</abbr> documentation</a>.
 </div>
 
 For detailed instructions, see the [CLI Commands](docs/README.md) documentation.
