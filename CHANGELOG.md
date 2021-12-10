@@ -6,8 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 2021-12-10
 ### Added
 - Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer <abbr title="Community Edition">CE</abbr> [2.11.0](https://app.swaggerhub.com/apis/portainer/portainer-ce/2.11.0) API
+
+### Fixed
+- Deleting old Docker repository tags in bulk
 
 ### Removed
 - Test <abbr title="Portainer Stack Utils">PSU</abbr> with Portainer <abbr title="Community Edition">CE</abbr> [2.5.1](https://app.swaggerhub.com/apis/portainer/portainer-ce/2.5.1) API
@@ -196,7 +200,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Debug mode
 - Strict mode
 
-[Unreleased]: https://gitlab.com/psuapp/psu/compare/v1.3.0...1-3-stable
+[Unreleased]: https://gitlab.com/psuapp/psu/compare/v1.3.1...1-3-stable
+[1.3.1]: https://gitlab.com/psuapp/psu/-/tags/v1.3.1
 [1.3.0]: https://gitlab.com/psuapp/psu/-/tags/v1.3.0
 [1.3.0-beta.1]: https://gitlab.com/psuapp/psu/-/tags/v1.3.0-beta.1
 [1.3.0-alpha]: https://gitlab.com/psuapp/psu/-/tags/v1.3.0-alpha
