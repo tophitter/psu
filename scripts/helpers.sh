@@ -157,7 +157,7 @@ function git_reset_from_last_stable_tag() {
 }
 
 # Remove tag names that are matching the regex (Git SHA1), keep always at least 3 and remove those who are older than 8 days
-# See: https://docs.gitlab.com/12.6/ee/api/container_registry.html#delete-repository-tags-in-bulk
+# See: https://docs.gitlab.com/14.5/ee/api/container_registry.html#delete-registry-repository-tags-in-bulk
 function cleanup_registry() {
   local registry_id="$1"
   if [ -z "$registry_id" ]; then
@@ -169,7 +169,8 @@ function cleanup_registry() {
     exit 1
   fi
 
-  curl --silent --show-error --fail --output /dev/null --request DELETE --data-urlencode 'name_regex=^(.+-)?[0-9a-f]{40}$' --data 'keep_n=3' --data 'older_than=8d' --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$registry_id/tags"
+  curl --silent --show-error --fail-with-body --request DELETE --data-urlencode 'name_regex_delete=(.+-)?[0-9a-f]{40}' --data 'keep_n=3' --data 'older_than=8d' --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$registry_id/tags"
+  echo "" # add a new line
 }
 
 # Can be execute only one time per hour
