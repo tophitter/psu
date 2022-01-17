@@ -30,7 +30,7 @@ _Based on previous work by [@vladbabii](https://github.com/vladbabii) on [docker
 
 ### Standalone
 
-> **Note**: The easiest way to install `psu` is to use [Docker method](#docker-image-and-variants), instead of this one
+> **Note**: The easiest way to install `psu` is to use [Docker method](#docker-image-variants-and-multi-architecture), instead of this one
 
 Check the [Requirements](#requirements) section then [git] clone the repo and use the [bash] script below:
 
