@@ -7,6 +7,8 @@
 set -e
 [[ "$PSU_TRACE" ]] && set -x
 
+AUTH_HEADER="Authorization: Bearer empty";
+
 ############################
 # Main entrypoint          #
 # Globals:                 #
@@ -109,21 +111,27 @@ main() {
   set_globals "$@"
 
   if [[ ! ${ACTIONS_TEXT_ONLY[*]} =~ $ACTION ]]; then
-    if [ -z "$PORTAINER_AUTH_TOKEN" ]; then
+	  AUTH_HEADER="Authorization: Bearer ${PORTAINER_AUTH_TOKEN}";
+    if [ -z "$PORTAINER_AUTH_TOKEN" ] && [ -z "$PORTAINER_API_TOKEN" ]; then
       login
+    fi
+
+    if [[ ! -z "$PORTAINER_API_TOKEN" ]]; then
+      AUTH_HEADER="X-API-Key: ${PORTAINER_API_TOKEN}";
     fi
 
     # Get list of all stacks
     echo_verbose "Getting stack $PORTAINER_STACK_NAME..."
     STACKS=$(curl_wrapper \
       --request GET \
-      --header "Authorization: Bearer ${PORTAINER_AUTH_TOKEN}" \
+	    --header "${AUTH_HEADER}" \
       "${PORTAINER_URL}/api/stacks")
     check_for_errors $? "$STACKS"
     echo_debug_safe_json "Get stacks response -> $(echo $STACKS | jq -C .)" "$STACKS"
 
     # Get desired stack from stacks list by it's name
-    STACK=$(echo "$STACKS" \
+	  echo "$STACKS" > ./stacks.json
+	  STACK=$(jq < ./stacks.json \
       | jq --arg PORTAINER_STACK_NAME "$PORTAINER_STACK_NAME" -jc '.[] | select(.Name == $PORTAINER_STACK_NAME)')
     echo_debug_safe_json "Stack ${PORTAINER_STACK_NAME} -> $(echo $STACK | jq -C .)" "$STACK"
   fi
@@ -383,7 +391,7 @@ set_globals() {
   # Check required arguments have been provided
   check_argument "$ACTION" "action" "ACTION" "a" "action"
   if [[ ! ${ACTIONS_TEXT_ONLY[*]} =~ $ACTION ]]; then
-    if [ -z "$PORTAINER_AUTH_TOKEN" ]; then
+    if [ -z "$PORTAINER_AUTH_TOKEN" ] && [ -z "$PORTAINER_API_TOKEN" ]; then
       check_argument "$PORTAINER_USER" "portainer user" "PORTAINER_USER" "u" "user"
       check_argument "$PORTAINER_PASSWORD" "portainer password" "PORTAINER_PASSWORD" "p" "password"
     fi
@@ -408,6 +416,13 @@ set_globals() {
 inputs() {
   while [ $# -gt 0 ]; do
     case "$1" in
+      -x=*|--token=*|-x|--token)
+      PORTAINER_API_TOKEN=$(input_option "$1" "$2")
+      if [ -n "$2" ] && [[ ! $2 =~ ^-.+$ ]] ; then
+            # When the second argument is the value of the current option
+            shift
+          fi
+      ;;
       -A=*|--auth-token=*|-A|--auth-token)
         PORTAINER_AUTH_TOKEN=$(input_option "$1" "$2")
         if [ -n "$2" ] && [[ ! $2 =~ ^-.+$ ]] ; then
@@ -1054,7 +1069,7 @@ deploy() {
       create=$(curl_wrapper \
         --max-time 300 \
         --request POST \
-        --header "Authorization: Bearer ${PORTAINER_AUTH_TOKEN}" \
+        --header "${AUTH_HEADER}" \
         --data "@${json_temp_path}" \
         "${PORTAINER_URL}/api/stacks?type=2&method=string&endpointId=${PORTAINER_ENDPOINT}")
 
@@ -1073,16 +1088,17 @@ deploy() {
       local data_suffix=",\"Env\":"$stack_envvars"}"
       echo "$data_prefix$docker_compose_file_content$data_suffix" > "$json_temp_path"
       echo_debug_safe_json "Stack JSON -> $(echo $data_prefix$docker_compose_file_content$data_suffix | jq -C .)" "$data_prefix$docker_compose_file_content$data_suffix"
-
+		echo $json_temp_path
       # Create stack for Docker swarm
-      echo_verbose "Creating stack $PORTAINER_STACK_NAME..."
+      echo_verbose "Creating swarm stack $PORTAINER_STACK_NAME..."
       local create
       create=$(curl_wrapper \
         --max-time 300 \
         --request POST \
-        --header "Authorization: Bearer ${PORTAINER_AUTH_TOKEN}" \
+        --header "${AUTH_HEADER}" \
         --data "@${json_temp_path}" \
         "${PORTAINER_URL}/api/stacks?type=1&method=string&endpointId=${PORTAINER_ENDPOINT}")
+	
       check_for_errors $? "$create"
       echo_debug "Create action response -> $(echo $create | jq -C .)"
     fi
@@ -1116,7 +1132,7 @@ deploy() {
     update=$(curl_wrapper \
       --max-time 300 \
       --request PUT \
-      --header "Authorization: Bearer ${PORTAINER_AUTH_TOKEN}" \
+      --header "${AUTH_HEADER}" \
       --data "@${json_temp_path}" \
       "${PORTAINER_URL}/api/stacks/${stack_id}?endpointId=${PORTAINER_ENDPOINT}")
     check_for_errors $? "$update"
@@ -1159,7 +1175,7 @@ undeploy() {
   local delete
   delete=$(curl_wrapper \
     --request DELETE \
-    --header "Authorization: Bearer ${PORTAINER_AUTH_TOKEN}" \
+    --header "${AUTH_HEADER}" \
     "${PORTAINER_URL}/api/stacks/${stack_id}?endpointId=${PORTAINER_ENDPOINT}")
   check_for_errors $? "$delete"
   echo_debug "Delete action response -> $(echo $delete | jq -C .)"
@@ -1188,7 +1204,7 @@ docker_info() {
   local docker_info
   docker_info=$(curl_wrapper \
     --request GET \
-    --header "Authorization: Bearer ${PORTAINER_AUTH_TOKEN}" \
+    --header "${AUTH_HEADER}" \
     "${PORTAINER_URL}/api/endpoints/${PORTAINER_ENDPOINT}/docker/info")
   check_for_errors $? "$docker_info"
 
@@ -1212,7 +1228,7 @@ tasks() {
   tasks=$(curl_wrapper \
     --request GET \
     --get \
-    --header "Authorization: Bearer ${PORTAINER_AUTH_TOKEN}" \
+    --header "${AUTH_HEADER}" \
     --data-urlencode "filters=${filters}" \
     "${PORTAINER_URL}/api/endpoints/${PORTAINER_ENDPOINT}/docker/tasks")
   check_for_errors $? "$tasks"
@@ -1261,7 +1277,7 @@ services() {
   services=$(curl_wrapper \
     --request GET \
     --get \
-    --header "Authorization: Bearer ${PORTAINER_AUTH_TOKEN}" \
+    --header "${AUTH_HEADER}" \
     --data-urlencode "filters=${filters}" \
     "${PORTAINER_URL}/api/endpoints/${PORTAINER_ENDPOINT}/docker/services")
   check_for_errors $? "$services"
@@ -1290,7 +1306,7 @@ containers() {
   containers=$(curl_wrapper \
     --request GET \
     --get \
-    --header "Authorization: Bearer ${PORTAINER_AUTH_TOKEN}" \
+    --header "${AUTH_HEADER}" \
     --data-urlencode "filters=${filters}" \
     "${PORTAINER_URL}/api/endpoints/${PORTAINER_ENDPOINT}/docker/containers/json")
   check_for_errors $? "$containers"
